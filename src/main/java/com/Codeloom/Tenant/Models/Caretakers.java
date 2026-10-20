@@ -1,6 +1,7 @@
 package com.Codeloom.Tenant.Models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,11 +23,23 @@ public class Caretakers {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long caretakerId;
 
-    @Column(nullable = false)
+    @NotBlank(message = "First name is required")
+    @Column(nullable = false, length = 100)
+    private String firstName;
+
+    @NotBlank(message = "Last name is required")
+    @Column(nullable = false, length = 100)
+    private String lastName;
+
+    @NotBlank(message = "Phone number is required")
+    @Column(nullable = false, length = 20)
+    private String phoneNumber;
+
+    @Column(nullable = false, updatable = false)
     private LocalDateTime employmentStartDate;
 
     private LocalDateTime employmentEndDate;
-
+    
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
             name = "user_id",
