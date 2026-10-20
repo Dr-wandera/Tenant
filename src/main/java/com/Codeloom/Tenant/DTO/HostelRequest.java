@@ -1,21 +1,33 @@
 package com.Codeloom.Tenant.DTO;
 
 import com.Codeloom.Tenant.Enum.Location;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class HostelRequest {
+
+    @NotBlank(message = "Hostel name required")
     private String hostelName;
-    private Long total_rooms;
+
+    @NotBlank(message = "Hostel photo required")
     private String hostelPhoto;
-    private  String address;
+
+    @NotBlank(message = "Address required")
+    private String address;
+
+    @NotBlank(message = "Hostel description required")
     private String hostelDescription;
+
+    @NotBlank(message = "Payment details required")
+    private String paymentDetails;
+
+    @NotNull(message = "Location required")
     private Location location;
-    private String payment_details;
+
+    @NotNull(message = "Total rooms required")
+    private Integer totalRooms;
+
+    private Long caretakerId;
 }
