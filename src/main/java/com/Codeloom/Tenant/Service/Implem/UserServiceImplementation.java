@@ -102,13 +102,6 @@ public class UserServiceImplementation implements UserServiceInterface {
             clientRepository.save(clients);
 
         }
-        else if (userRequest.getRole() == Role.CARETAKER) {
-            Caretakers caretakers =Caretakers.builder()
-                    .user(users)
-                    .build();
-
-            caretakerRepository.save(caretakers);
-        }
         else {
             throw new RuntimeException("Invalid role");
         }
