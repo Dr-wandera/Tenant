@@ -21,6 +21,7 @@ public class CaretakerServiceImplementation implements CaretakerServiceInterface
     private final UserRepository userRepository;
     private final CaretakerRepository caretakerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserServiceImplementation userServiceImplementation;
 
     @Transactional
     @Override
@@ -37,7 +38,12 @@ public class CaretakerServiceImplementation implements CaretakerServiceInterface
 
         Caretakers caretakers =Caretakers.builder()
                 .user(users)
+                .firstName(caretakerRequest.getFirstName())
+                .lastName(caretakerRequest.getLastName())
                 .employmentStartDate(LocalDateTime.now())
+                .employmentEndDate(LocalDateTime.now().plusDays(120))
+                .phoneNumber(caretakerRequest.getPhoneNumber())
+                .caretakerNumber(generateCaretakerNumber())
                 .build();
 
         caretakerRepository.save(caretakers);
@@ -45,11 +51,16 @@ public class CaretakerServiceImplementation implements CaretakerServiceInterface
 
     }
 
+    //Generates caretaker identification number
+    private String generateCaretakerNumber() {
+        return userServiceImplementation.generateUserNumber();
+    }
+
     private Users toEntity(CaretakerRequest caretakerRequest) {
        return Users.builder()
                 .email(caretakerRequest.getEmail())
                 .password(passwordEncoder.encode(caretakerRequest.getPassword()))
-                .userNumber(generateCaretakerNumber())
+                .userNumber(generateUserNumber())
                 .active(true)
                 .role(Role.CARETAKER)
                 .firstName(caretakerRequest.getFirstName())
@@ -60,12 +71,7 @@ public class CaretakerServiceImplementation implements CaretakerServiceInterface
     }
 
     //generate caretaker number, unique number
-    private String generateCaretakerNumber() {
-        SecureRandom random = new SecureRandom();
-
-        // Generates a random number between 100000 and 999999 inclusive
-        int number = 100000 + random.nextInt(900000);
-
-        return String.valueOf(number);
+    private String generateUserNumber() {
+        return userServiceImplementation.generateUserNumber();
     }
 }

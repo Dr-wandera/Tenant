@@ -22,13 +22,10 @@ public class Caretakers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long caretakerId;
-
-    @NotBlank(message = "First name is required")
-    @Column(nullable = false, length = 100)
+    private String caretakerNumber;
+    @NotBlank(message = "FirstName is required")
     private String firstName;
-
-    @NotBlank(message = "Last name is required")
-    @Column(nullable = false, length = 100)
+    @NotBlank(message = "LastName is required")
     private String lastName;
 
     @NotBlank(message = "Phone number is required")
@@ -39,7 +36,7 @@ public class Caretakers {
     private LocalDateTime employmentStartDate;
 
     private LocalDateTime employmentEndDate;
-    
+
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
             name = "user_id",
