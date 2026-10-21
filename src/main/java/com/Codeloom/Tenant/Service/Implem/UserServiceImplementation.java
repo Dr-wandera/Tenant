@@ -187,7 +187,7 @@ public class UserServiceImplementation implements UserServiceInterface {
     }
 
     //Generate user identification number
-    private String generateUserNumber() {
+    public String generateUserNumber() {
         String CHARACTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
         SecureRandom random = new SecureRandom();
         int length = 10; // Target length for the user number
