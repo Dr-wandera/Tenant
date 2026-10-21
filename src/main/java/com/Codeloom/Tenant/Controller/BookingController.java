@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class BookingController {
     private final BookingServiceImplementation bookingServiceImplementation;
 
-    //User booking  hostel@PostMapping("/book")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String bookHostel(@RequestBody BookingRequest BookingRequest) {
