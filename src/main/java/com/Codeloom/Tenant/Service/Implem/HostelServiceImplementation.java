@@ -6,10 +6,7 @@ import com.Codeloom.Tenant.Enum.BookingStatus;
 import com.Codeloom.Tenant.Enum.ClientType;
 import com.Codeloom.Tenant.Enum.Status;
 import com.Codeloom.Tenant.Models.*;
-import com.Codeloom.Tenant.Repository.ClientRepository;
-import com.Codeloom.Tenant.Repository.HostelRepository;
-import com.Codeloom.Tenant.Repository.LandlordRepository;
-import com.Codeloom.Tenant.Repository.UserRepository;
+import com.Codeloom.Tenant.Repository.*;
 import com.Codeloom.Tenant.Service.Interface.HostelServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +30,7 @@ public class HostelServiceImplementation implements HostelServiceInterface {
     private final HostelRepository hostelRepository;
     private final LandlordRepository landlordRepository;
     private final UserRepository userRepository;
-    private final UserServiceImplementation userServiceImplementation;
-    private final ClientRepository clientRepository;
+    private final CaretakerRepository caretakerRepository;
 
     @Override
     public void createHostel(HostelRequest hostelRequest) {
@@ -63,6 +59,11 @@ public class HostelServiceImplementation implements HostelServiceInterface {
 
         }
 
+        //checks for caretaker profile to be assigned to hostel
+        Caretakers caretakers=caretakerRepository.findByCaretakerNumber(hostelRequest.getCaretakerNumber())
+                .orElseThrow(()->new RuntimeException("Caretaker not found"));
+
+
         //create hostel object
         Hostels hostel = Hostels.builder()
                 .landLord(landlord)
@@ -72,6 +73,8 @@ public class HostelServiceImplementation implements HostelServiceInterface {
                 .hostelDescription(hostelRequest.getHostelDescription())
                 .address(hostelRequest.getAddress())
                 .location(hostelRequest.getLocation())
+                .caretakers(caretakers)
+                .paymentDetails(hostelRequest.getPaymentDetails())
                 .build();
 
         hostelRepository.save(hostel);

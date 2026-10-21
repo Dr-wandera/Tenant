@@ -29,5 +29,5 @@ public class HostelRequest {
     @NotNull(message = "Total rooms required")
     private Integer totalRooms;
 
-    private Long caretakerId;
+    private String caretakerNumber;
 }

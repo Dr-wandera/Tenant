@@ -7,6 +7,7 @@ import com.Codeloom.Tenant.Service.Implem.HostelServiceImplementation;
 import lombok.RequiredArgsConstructor;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +32,13 @@ public class HostelController {
         return hostelServiceImplementation.allHostel(page,size);
     }
 
-
+    //landlord interface
+    @PostMapping("/add_hostel")
+    @ResponseStatus(HttpStatus.CREATED)
+    public  String AddHostel(@RequestBody HostelRequest hostelRequest){
+        hostelServiceImplementation.createHostel(hostelRequest);
+        return "Hostel Added successfully";
+    }
 
 }
 
