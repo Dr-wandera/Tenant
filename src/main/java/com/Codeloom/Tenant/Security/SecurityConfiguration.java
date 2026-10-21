@@ -36,8 +36,8 @@ public class SecurityConfiguration {
                                 "/swagger-ui/**", "/v3/api-docs/**"
 
                         ).permitAll()
-                        .requestMatchers("/landlord/**").hasRole("LANDLORD")
-                        .requestMatchers("/seller/**").hasAnyRole("SELLER", "ADMIN")
+                        .requestMatchers("/hostel/add_hostel").hasRole("LANDLORD")
+                        .requestMatchers("/caretaker/**").hasAnyRole("LANDLORD", "ADMIN")
                         .anyRequest()
                         .authenticated()
                 )
