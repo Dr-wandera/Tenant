@@ -16,6 +16,23 @@ spring:
       hibernate:
         format_sql: true
 
+## Email config
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GMAIL_USERNAME}
+    password: ${GMAIL_PASSWORDKEY}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
 
 jwt:
   secret: ${JWT_SECRET}
+
+
+
