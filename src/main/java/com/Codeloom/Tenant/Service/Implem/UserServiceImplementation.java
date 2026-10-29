@@ -5,17 +5,16 @@ import com.Codeloom.Tenant.DTO.LoginResponse;
 import com.Codeloom.Tenant.DTO.UserRequest;
 import com.Codeloom.Tenant.Enum.ClientType;
 import com.Codeloom.Tenant.Enum.Role;
-import com.Codeloom.Tenant.Models.Caretakers;
 import com.Codeloom.Tenant.Models.Clients;
 import com.Codeloom.Tenant.Models.LandLord;
 import com.Codeloom.Tenant.Models.Users;
-import com.Codeloom.Tenant.Repository.CaretakerRepository;
 import com.Codeloom.Tenant.Repository.ClientRepository;
 import com.Codeloom.Tenant.Repository.LandlordRepository;
 import com.Codeloom.Tenant.Repository.UserRepository;
 import com.Codeloom.Tenant.Security.AppUserDetailService;
 import com.Codeloom.Tenant.Security.JwtService;
 import com.Codeloom.Tenant.Service.Interface.UserServiceInterface;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -30,12 +29,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 @Service
 @Log4j2
@@ -44,16 +43,16 @@ public class UserServiceImplementation implements UserServiceInterface {
     private final UserRepository userRepository;
     private final LandlordRepository landlordRepository;
     private  final ClientRepository clientRepository;
-    private final CaretakerRepository caretakerRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final AppUserDetailService userDetailsService;
+    private final OtpVerificationServiceImplementation otpVerificationServiceImplementation;
 
     Role assignedRole;
 
     @Override
-    public void userRegistration(UserRequest userRequest) {
+    public void userRegistration(UserRequest userRequest) throws MessagingException, IOException {
 
         // If role is not provided → automatically assign it to USER
         if (userRequest.getRole() == null) {
@@ -76,7 +75,7 @@ public class UserServiceImplementation implements UserServiceInterface {
         Users users = toEntity(userRequest);
 
         // Save the new user
-        userRepository.save(users);
+        Users savedUser=userRepository.save(users);
 
         //saves registered user if it is a landlord
         if (userRequest.getRole() == Role.LANDLORD){
@@ -106,6 +105,8 @@ public class UserServiceImplementation implements UserServiceInterface {
             throw new RuntimeException("Invalid role");
         }
 
+        //sends OTP  notification to registered user to verify account
+        otpVerificationServiceImplementation.generateVerificationOtp(savedUser);
 
     }
 
@@ -166,6 +167,18 @@ public class UserServiceImplementation implements UserServiceInterface {
 
     }
 
+    //verify user account
+    @Override
+    public void verifyAccountOtp(String otpCode) {
+        otpVerificationServiceImplementation.accountVerificationOtp(otpCode);
+    }
+
+    //resends otp if the previous expired
+    @Override
+    public void resendOtp(String otpCode) throws MessagingException, IOException {
+        otpVerificationServiceImplementation.resendVerificationOtp(otpCode);
+    }
+
     private void authenticate(String email, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
     }
@@ -182,7 +195,7 @@ public class UserServiceImplementation implements UserServiceInterface {
                 .password(passwordEncoder.encode(userRequest.getPassword()))
                 .phoneNumber(userRequest.getPhoneNumber())
                 .role(assignedRole)
-                .active(true)
+                .active(false)
                 .build();
     }
 
