@@ -15,6 +15,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -36,8 +42,6 @@ public class SecurityConfiguration {
                                 "/swagger-ui/**", "/v3/api-docs/**"
 
                         ).permitAll()
-                        .requestMatchers("/hostel/add_hostel").hasRole("LANDLORD")
-                        .requestMatchers("/caretaker/**").hasAnyRole("LANDLORD", "ADMIN")
                         .anyRequest()
                         .authenticated()
                 )
@@ -63,4 +67,26 @@ public class SecurityConfiguration {
         authProvider.setPasswordEncoder(passwordEncoder());
         return new ProviderManager(authProvider);
     }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // 1. Explicitly allow your Live Server origin (from your browser error console)
+        configuration.setAllowedOrigins(List.of("http://127.0.0.1:5500"));
+
+        // 2. Allow the standard HTTP methods your frontend will use
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // 3. Allow headers (Content-Type, Authorization, etc.)
+        configuration.setAllowedHeaders(List.of("*"));
+
+        // 4. Allow sending cookies/auth headers if needed later
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        // Apply this configuration rules to all application paths
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 }
+
