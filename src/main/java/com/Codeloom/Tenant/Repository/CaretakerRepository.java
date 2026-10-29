@@ -9,4 +9,8 @@ import java.util.Optional;
 @Repository
 public interface CaretakerRepository extends JpaRepository<Caretakers, Long> {
     Optional<Caretakers> findByCaretakerNumber(String caretakerNumber);
+
+    Optional<Caretakers> findByIdNumber(String idNumber);
+
+    Optional<Caretakers> findByCaretakerId(Long caretakerId);
 }

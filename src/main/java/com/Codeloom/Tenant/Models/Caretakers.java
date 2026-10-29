@@ -27,6 +27,8 @@ public class Caretakers {
     private String firstName;
     @NotBlank(message = "LastName is required")
     private String lastName;
+    @NotBlank(message = "Id number is required")
+    private String idNumber;
 
     @NotBlank(message = "Phone number is required")
     @Column(nullable = false, length = 20)
