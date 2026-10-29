@@ -28,10 +28,7 @@ import java.time.LocalDateTime;
                         name = "idx_booking_room_dates",
                         columnList = "room_id, check_in, check_out"
                 ),
-                @Index(
-                        name = "idx_booking_hostel",
-                        columnList = "hostel_id"
-                )
+
         }
 )
 public class Bookings {
@@ -48,10 +45,6 @@ public class Bookings {
     @JoinColumn(name = "room_id", nullable = false)
     private Rooms room;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "hostel_id", nullable = false)
-    private Hostels hostel;
-
     @NotNull(message = "Check-in date required")
     @Column(name = "check_in", nullable = false)
     private LocalDate checkIn;
@@ -64,7 +57,7 @@ public class Bookings {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
-    private BookingStatus status = BookingStatus.PENDING;
+    private BookingStatus status;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;

@@ -1,8 +1,13 @@
 package com.Codeloom.Tenant.Service.Interface;
 
-import com.Codeloom.Tenant.DTO.BookingRequest;
-import com.Codeloom.Tenant.Models.Bookings;
+import jakarta.mail.MessagingException;
+
+import java.io.IOException;
 
 public interface BookingServiceInterface {
-    void bookingHostel(BookingRequest bookingsRequest);
+    void bookingRoom(String roomId) throws MessagingException, IOException;
+
+    void approvesPendingRoomBooked(String roomId);
+
+    void cancelBooking(String roomId);
 }
