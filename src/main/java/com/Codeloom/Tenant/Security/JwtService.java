@@ -24,8 +24,17 @@ public class JwtService {
         return Jwts
                 .builder()
                 .subject(userDetails.getUsername())
+                .claim(
+                        "role",
+                        userDetails.getAuthorities()
+                                .stream()
+                                .findFirst()
+                                .orElseThrow(() ->
+                                        new IllegalStateException("User has no assigned role"))
+                                .getAuthority()
+                )
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 3))//3h
+                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 3)) // 3 hours
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
