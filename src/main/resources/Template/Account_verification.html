@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Your Black Cart Account</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #181818;
+            margin: 0;
+            padding: 5px 16px;
+            font-family: Arial, Helvetica, sans-serif;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            color: #E8E8E8;
+        }
+
+        .email-wrapper {
+            width: 100%;
+            max-width: 660px;
+            margin: 0 auto;
+            background-color: #111111;
+            border: 1px solid #242424;
+            border-top: 5px solid #292929;
+        }
+
+        .email-content {
+            padding: 25px 32px 45px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #A6E3D8;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 25px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .greeting {
+            font-size: 20px;
+            line-height: 1.6;
+            margin: 0 0 20px;
+            color: #E8E8E8;
+        }
+
+        .message {
+            font-size: 20px;
+            line-height: 1.75;
+            margin: 0 0 45px;
+            color: #E8E8E8;
+        }
+
+        /* OTP verification box */
+        .otp-container {
+            margin: 0 0 45px;
+            padding: 30px 15px;
+            background-color: #003F38;
+            text-align: center;
+        }
+
+        .otp-box {
+            display: inline-block;
+            color: #FFFFFF;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 38px;
+            font-weight: 700;
+            letter-spacing: 8px;
+            overflow-wrap: anywhere;
+        }
+
+        .note {
+            font-size: 20px;
+            line-height: 1.75;
+            color: #E8E8E8;
+            margin: 0 0 65px;
+        }
+
+        /* Help section */
+        .help-section {
+            text-align: center;
+            margin-bottom: 55px;
+            font-size: 19px;
+            line-height: 1.7;
+            color: #E8E8E8;
+        }
+
+        .help-section strong {
+            color: #A6E3D8;
+        }
+
+        .help-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 18px 28px;
+            background-color: #222222;
+            color: #A6E3D8;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        /* Security tip */
+        .tip {
+            margin-bottom: 45px;
+            padding: 22px 25px;
+            border-left: 6px solid #719F97;
+            background-color: #262626;
+            font-size: 18px;
+            line-height: 1.7;
+            color: #E8E8E8;
+        }
+
+        .tip strong {
+            color: #A6E3D8;
+        }
+
+        .closing {
+            font-size: 20px;
+            line-height: 1.7;
+            margin: 0;
+            color: #E8E8E8;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid #292929;
+            padding: 25px 24px;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #A9A9A9;
+        }
+
+        .footer p {
+            margin: 8px 0;
+        }
+
+        .footer a {
+            color: #A6E3D8;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .copyright {
+            margin-top: 20px !important;
+        }
+
+        /* Mobile responsive styling */
+        @media screen and (max-width: 520px) {
+            body {
+                padding: 0;
+            }
+
+            .email-wrapper {
+                border-left: 0;
+                border-right: 0;
+            }
+
+            .email-content {
+                padding: 22px 20px 35px;
+            }
+
+            .header h2 {
+                font-size: 22px;
+            }
+
+            .greeting {
+                font-size: 18px;
+            }
+
+            .message,
+            .note,
+            .closing {
+                font-size: 17px;
+                line-height: 1.7;
+            }
+
+            .message {
+                margin-bottom: 32px;
+            }
+
+            .otp-container {
+                padding: 25px 10px;
+                margin-bottom: 32px;
+            }
+
+            .otp-box {
+                font-size: clamp(20px, 6vw, 32px);
+                letter-spacing: 4px;
+            }
+
+            .note {
+                margin-bottom: 45px;
+            }
+
+            .help-section {
+                font-size: 17px;
+                margin-bottom: 38px;
+            }
+
+            .help-button {
+                padding: 15px 22px;
+            }
+
+            .tip {
+                padding: 18px;
+                font-size: 16px;
+                margin-bottom: 35px;
+            }
+
+            .footer {
+                padding: 22px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="email-wrapper" role="article"
+     aria-label="Black Cart account verification email">
+
+    <div class="email-content">
+
+        <!-- Header -->
+        <div class="header">
+            <h2>Welcome to Tenant</h2>
+        </div>
+
+        <!-- Greeting -->
+        <p class="greeting">
+            Hi 👋 {{username}},
+        </p>
+
+        <!-- Introduction -->
+        <p class="message">
+            Thank you for registering on the Tenant App!
+            Please use the following verification code to complete
+            your registration:
+        </p>
+
+        <!-- OTP code -->
+        <div class="otp-container">
+            <span class="otp-box">{{otp}}</span>
+        </div>
+
+        <!-- Verification instructions -->
+        <p class="note">
+            Enter this code in the app to verify your email address
+            and complete the registration process.
+        </p>
+
+        <!-- Help section -->
+        <div class="help-section">
+            <strong>Need help?</strong>
+            Contact our support team if you experience any problems
+            verifying your account.
+
+            <br>
+
+            <a class="help-button"
+               href="mailto:hello@tenant.app">
+                Contact Support
+            </a>
+        </div>
+
+        <!-- Security tip -->
+        <div class="tip">
+            <strong>Tip:</strong>
+            Verifying your email helps protect your account and
+            ensures that you can receive important updates about
+            Black Cart. Never share your verification code with anyone.
+        </div>
+
+        <!-- Closing message -->
+        <p class="closing">
+            Thank you for choosing Tenant app!
+        </p>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+
+        <p>
+            If you have any questions or need assistance, please
+            contact our support team at
+            <a href="mailto:hello@tenant.app">
+                hello@tenant.app
+            </a>
+        </p>
+
+        <p class="copyright">
+            &copy; 2026 Tenant. All rights reserved.
+            &copy; Developer Faustine Wandera
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>
