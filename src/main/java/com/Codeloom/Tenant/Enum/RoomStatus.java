@@ -1,8 +1,9 @@
 package com.Codeloom.Tenant.Enum;
 
-public enum Status {
+public enum RoomStatus {
     AVAILABLE,
     OCCUPIED,
     MAINTENANCE,
-    INACTIVE
+    PROCESSING
+
 }

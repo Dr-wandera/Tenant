@@ -1,6 +1,6 @@
 package com.Codeloom.Tenant.Models;
 
-import com.Codeloom.Tenant.Enum.Status;
+import com.Codeloom.Tenant.Enum.RoomStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -32,17 +32,14 @@ public class Rooms {
     @NotNull(message = "Room price required")
     @DecimalMin(value = "0.00", inclusive = false)
     @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal price;
+    private BigDecimal monthlyRent;
 
     @Column(length = 500)
     private String roomPhoto;
 
-    @Column(length = 2000)
-    private String roomDescription;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
-    private Status status = Status.AVAILABLE;
+    private RoomStatus status = RoomStatus.AVAILABLE;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "hostel_id", nullable = false)
