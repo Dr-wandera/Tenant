@@ -12,7 +12,7 @@ public class HostelRequest {
     private String hostelName;
 
     @NotBlank(message = "Hostel photo required")
-    private String hostelPhoto;
+    private String hostelImage;
 
     @NotBlank(message = "Address required")
     private String address;
@@ -29,5 +29,5 @@ public class HostelRequest {
     @NotNull(message = "Total rooms required")
     private Integer totalRooms;
 
-    private String caretakerNumber;
+    private String idNumber;
 }

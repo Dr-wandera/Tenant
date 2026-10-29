@@ -3,7 +3,6 @@ package com.Codeloom.Tenant.Models;
 import com.Codeloom.Tenant.Enum.Location;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,8 +30,10 @@ public class Hostels {
     private String hostelName;
 
     @NotBlank(message = "Hostel photo required")
-    @Column(nullable = false, length = 500)
-    private String hostelPhoto;
+    @Lob
+    @Column(nullable = false, columnDefinition = "bytea")
+    private byte[] hostelImage;
+
 
     @NotBlank(message = "Address required")
     @Column(nullable = false, length = 255)
@@ -60,8 +61,5 @@ public class Hostels {
 
     @OneToMany(mappedBy = "hostel", fetch = FetchType.LAZY)
     private List<Rooms> rooms = new ArrayList<>();
-
-    @OneToMany(mappedBy = "hostel", fetch = FetchType.LAZY)
-    private List<Bookings> bookings = new ArrayList<>();
 
 }

@@ -16,4 +16,7 @@ public interface HostelServiceInterface {
 
     List<HostelResponse> allHostel(int page, int size);
 
+    void updateHostel(String hostelId, HostelRequest hostelRequest);
+
+    void deleteHostel(String hostelId);
 }

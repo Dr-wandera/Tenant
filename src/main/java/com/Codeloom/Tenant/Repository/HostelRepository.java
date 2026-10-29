@@ -14,4 +14,6 @@ public interface HostelRepository extends JpaRepository<Hostels, Long> {
     Optional<Hostels> findByHostelNameContainingIgnoreCase(String hostelName);
 
     Optional<Hostels> findByHostelNumber(@NotNull(message = "Hostel ID cannot be empty") String hostelNumber);
+
+    Optional<Hostels> findByHostelId(String hostelId);
 }
