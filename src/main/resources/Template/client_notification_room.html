@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Allocation Details</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 5px 16px;
+            background-color: #181818;
+            color: #E8E8E8;
+            font-family: Arial, Helvetica, sans-serif;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .email-wrapper {
+            width: 100%;
+            max-width: 660px;
+            margin: 0 auto;
+            background-color: #111111;
+            border: 1px solid #242424;
+            border-top: 5px solid #292929;
+        }
+
+        .email-content {
+            padding: 30px 32px 45px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            text-align: center;
+            color: #A6E3D8;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 25px;
+            line-height: 1.4;
+        }
+
+        .greeting,
+        .message,
+        .closing {
+            font-size: 19px;
+            line-height: 1.75;
+            color: #E8E8E8;
+        }
+
+        .greeting {
+            margin-bottom: 18px;
+        }
+
+        .message {
+            margin-bottom: 30px;
+        }
+
+        .details-heading {
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #A6E3D8;
+        }
+
+        /* Hostel and room information */
+        .room-card {
+            margin-bottom: 35px;
+            padding: 24px;
+            background-color: #003F38;
+        }
+
+        .detail-row {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+            font-size: 17px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            display: block;
+            margin-bottom: 4px;
+            color: #A6E3D8;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            color: #FFFFFF;
+            font-weight: bold;
+        }
+
+        /* Caretaker and landlord contacts */
+        .contact-section {
+            margin-bottom: 35px;
+            padding: 22px 25px;
+            background-color: #262626;
+            border-left: 6px solid #719F97;
+        }
+
+        .contact-section h3 {
+            margin: 0 0 16px;
+            color: #A6E3D8;
+            font-size: 19px;
+        }
+
+        .contact-person {
+            margin-bottom: 22px;
+            font-size: 16px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .contact-name {
+            color: #FFFFFF;
+            font-weight: bold;
+        }
+
+        .contact-phone {
+            color: #A6E3D8;
+            text-decoration: none;
+        }
+
+        /* Helpful tip */
+        .tip {
+            margin-bottom: 35px;
+            padding: 20px 24px;
+            background-color: #262626;
+            border-left: 6px solid #719F97;
+            font-size: 16px;
+            line-height: 1.7;
+            color: #E8E8E8;
+        }
+
+        .tip strong {
+            color: #A6E3D8;
+        }
+
+        .closing {
+            margin-bottom: 0;
+        }
+
+        /* Footer */
+        .email-footer {
+            padding: 25px 24px;
+            border-top: 1px solid #292929;
+            color: #A9A9A9;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.8;
+            overflow-wrap: anywhere;
+        }
+
+        .email-footer p {
+            margin: 6px 0;
+        }
+
+        /* Mobile styling */
+        @media screen and (max-width: 520px) {
+            body {
+                padding: 0;
+            }
+
+            .email-wrapper {
+                border-left: 0;
+                border-right: 0;
+            }
+
+            .email-content {
+                padding: 24px 20px 35px;
+            }
+
+            .header h2 {
+                font-size: 22px;
+            }
+
+            .greeting,
+            .message,
+            .closing {
+                font-size: 17px;
+            }
+
+            .room-card {
+                padding: 18px;
+            }
+
+            .detail-row {
+                font-size: 16px;
+            }
+
+            .contact-section,
+            .tip {
+                padding: 18px;
+            }
+
+            .email-footer {
+                padding: 22px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="email-wrapper"
+     role="article"
+     aria-label="Tenant room allocation details email">
+
+    <div class="email-content">
+
+        <!-- Header -->
+        <div class="header">
+            <h2>Your Room Details</h2>
+        </div>
+
+        <!-- Greeting -->
+        <p class="greeting">
+            Hello 👋,
+        </p>
+
+        <!-- Introduction -->
+        <p class="message">
+            Your room allocation details are provided below.
+            Please keep this information for your reference.
+            If you need assistance, you can contact your caretaker
+            or landlord using the contact details provided.
+        </p>
+
+        <!-- Hostel and Room Information -->
+        <h3 class="details-heading">
+            Room and Hostel Information
+        </h3>
+
+        <div class="room-card">
+
+            <div class="detail-row">
+                <span class="detail-label">Hostel Name</span>
+                <span class="detail-value">{{hostelName}}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Room Number</span>
+                <span class="detail-value">{{RoomNumber}}</span>
+            </div>
+
+        </div>
+
+        <!-- Contact Information -->
+        <h3 class="details-heading">
+            Your Accommodation Contacts
+        </h3>
+
+        <div class="contact-section">
+
+            <!-- Caretaker -->
+            <h3>Caretaker Contact</h3>
+
+            <p class="contact-person">
+                <span class="detail-label">Caretaker Name</span>
+                <span class="contact-name">{{caretakerFirstName}}</span>
+
+                <br>
+
+                <span class="detail-label">Phone Number</span>
+                <a class="contact-phone"
+                   href="tel:{{caretakerPhoneNumber}}">
+                    {{caretakerPhoneNumber}}
+                </a>
+            </p>
+
+            <!-- Landlord -->
+            <h3>Landlord Contact</h3>
+
+            <p class="contact-person">
+                <span class="detail-label">Landlord Name</span>
+                <span class="contact-name">{{landlordFirstName}}</span>
+
+                <br>
+
+                <span class="detail-label">Phone Number</span>
+                <a class="contact-phone"
+                   href="tel:{{landlordPhoneNumber}}">
+                    {{landlordPhoneNumber}}
+                </a>
+            </p>
+
+        </div>
+
+        <!-- Helpful Tip -->
+        <div class="tip">
+            <strong>Tip:</strong>
+            Keep your room number and the contact details of your
+            caretaker and landlord accessible. Contact your caretaker
+            for day-to-day assistance or your landlord for
+            accommodation-related matters.
+        </div>
+
+        <!-- Closing Message -->
+        <p class="closing">
+            Thank you for choosing Tenant!
+            We wish you a comfortable and pleasant stay.
+        </p>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="email-footer">
+
+        <p>
+            This is an automated room information email.
+            Please contact your caretaker or landlord if you need assistance.
+        </p>
+
+        <p>
+            &copy; 2026 Tenant. All rights reserved.
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>
