@@ -1,0 +1,322 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Tenant Room Assignment</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 5px 16px;
+            background-color: #181818;
+            color: #E8E8E8;
+            font-family: Arial, Helvetica, sans-serif;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        .email-wrapper {
+            width: 100%;
+            max-width: 660px;
+            margin: 0 auto;
+            background-color: #111111;
+            border: 1px solid #242424;
+            border-top: 5px solid #292929;
+        }
+
+        .email-content {
+            padding: 30px 32px 45px;
+        }
+
+        .header {
+            margin-bottom: 30px;
+            text-align: center;
+            color: #A6E3D8;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 25px;
+            line-height: 1.4;
+        }
+
+        .greeting,
+        .message,
+        .closing {
+            font-size: 19px;
+            line-height: 1.75;
+            color: #E8E8E8;
+        }
+
+        .greeting {
+            margin-bottom: 18px;
+        }
+
+        .message {
+            margin-bottom: 30px;
+        }
+
+        .section-heading {
+            margin-bottom: 15px;
+            font-size: 20px;
+            color: #A6E3D8;
+        }
+
+        /* Room details */
+        .room-card {
+            margin-bottom: 35px;
+            padding: 24px;
+            background-color: #003F38;
+        }
+
+        .detail-row {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+            font-size: 17px;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            display: block;
+            margin-bottom: 4px;
+            color: #A6E3D8;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            color: #FFFFFF;
+            font-weight: bold;
+        }
+
+        /* Tenant details */
+        .tenant-card {
+            margin-bottom: 35px;
+            padding: 22px 25px;
+            background-color: #262626;
+            border-left: 6px solid #719F97;
+        }
+
+        .tenant-card h3 {
+            margin: 0 0 18px;
+            color: #A6E3D8;
+            font-size: 19px;
+        }
+
+        .tenant-row {
+            padding: 10px 0;
+            border-bottom: 1px solid #383838;
+            font-size: 16px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .tenant-row:last-child {
+            border-bottom: none;
+        }
+
+        .tenant-label {
+            display: block;
+            color: #A9A9A9;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .tenant-value {
+            color: #FFFFFF;
+            font-weight: bold;
+        }
+
+        .phone-link {
+            color: #A6E3D8;
+            text-decoration: none;
+        }
+
+        /* Important notice */
+        .tip {
+            margin-bottom: 35px;
+            padding: 20px 24px;
+            background-color: #262626;
+            border-left: 6px solid #719F97;
+            font-size: 16px;
+            line-height: 1.7;
+            color: #E8E8E8;
+        }
+
+        .tip strong {
+            color: #A6E3D8;
+        }
+
+        .closing {
+            margin-bottom: 0;
+        }
+
+        /* Footer */
+        .email-footer {
+            padding: 25px 24px;
+            border-top: 1px solid #292929;
+            color: #A9A9A9;
+            text-align: center;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .email-footer p {
+            margin: 6px 0;
+        }
+
+        /* Responsive layout */
+        @media screen and (max-width: 520px) {
+            body {
+                padding: 0;
+            }
+
+            .email-wrapper {
+                border-left: 0;
+                border-right: 0;
+            }
+
+            .email-content {
+                padding: 24px 20px 35px;
+            }
+
+            .header h2 {
+                font-size: 22px;
+            }
+
+            .greeting,
+            .message,
+            .closing {
+                font-size: 17px;
+            }
+
+            .room-card {
+                padding: 18px;
+            }
+
+            .tenant-card,
+            .tip {
+                padding: 18px;
+            }
+
+            .email-footer {
+                padding: 22px 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="email-wrapper"
+     role="article"
+     aria-label="New tenant room assignment notification">
+
+    <div class="email-content">
+
+        <!-- Email heading -->
+        <header class="header">
+            <h2>New Tenant Room Assignment</h2>
+        </header>
+
+        <!-- Greeting to the caretaker and landlord -->
+        <p class="greeting">
+            Hello 👋,
+        </p>
+
+        <!-- Introduction -->
+        <p class="message">
+            This is to notify you that a tenant has been assigned
+            to a room in your hostel. Please find the tenant's
+            information and room details below for your records
+            and any necessary follow-up.
+        </p>
+
+        <!-- Room and hostel information -->
+        <h3 class="section-heading">
+            Room and Hostel Information
+        </h3>
+
+        <section class="room-card">
+
+            <div class="detail-row">
+                <span class="detail-label">Hostel Name</span>
+                <span class="detail-value">{{hostelName}}</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Room Number</span>
+                <span class="detail-value">{{RoomNumber}}</span>
+            </div>
+
+        </section>
+
+        <!-- Tenant information -->
+        <section class="tenant-card">
+
+            <h3>Tenant Information</h3>
+
+            <div class="tenant-row">
+                <span class="tenant-label">Tenant Name</span>
+                <span class="tenant-value">{{firstName}}</span>
+            </div>
+
+            <div class="tenant-row">
+                <span class="tenant-label">Tenant Phone Number</span>
+                <a class="phone-link"
+                   href="tel:{{phoneNumber}}">
+                    {{phoneNumber}}
+                </a>
+            </div>
+
+        </section>
+
+        <!-- Action notice -->
+        <aside class="tip">
+            <strong>Important:</strong>
+            Please update your records accordingly and coordinate
+            with the tenant regarding room access, check-in arrangements,
+            and any relevant hostel rules.
+        </aside>
+
+        <!-- Closing message -->
+        <p class="closing">
+            Thank you for your continued cooperation in ensuring
+            effective hostel management.
+        </p>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="email-footer">
+
+        <p>
+            This is an automated tenant assignment notification.
+            Please keep this information for hostel management purposes.
+        </p>
+
+        <p>
+            &copy; 2026 Tenant. All rights reserved.
+        </p>
+
+    </footer>
+
+</div>
+
+</body>
+</html>
