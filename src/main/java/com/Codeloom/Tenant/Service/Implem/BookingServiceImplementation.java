@@ -65,6 +65,7 @@ public class BookingServiceImplementation implements BookingServiceInterface {
 
         //change room status to occupied after room booked
         rooms.setStatus(RoomStatus.PROCESSING);
+        rooms.setClient(client);
         roomsRepository.save(rooms);
 
         //sends notification to landlord/ caretaker after client make a room book
