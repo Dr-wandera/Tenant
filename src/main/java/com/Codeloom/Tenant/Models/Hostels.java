@@ -30,9 +30,8 @@ public class Hostels {
     private String hostelName;
 
     @NotBlank(message = "Hostel photo required")
-    @Lob
-    @Column(nullable = false, columnDefinition = "bytea")
-    private byte[] hostelImage;
+    @Column(nullable = false)
+    private String hostelImage;
 
 
     @NotBlank(message = "Address required")

@@ -47,4 +47,8 @@ public class Rooms {
 
     @OneToMany(mappedBy = "room", fetch = FetchType.LAZY)
     private List<Bookings> bookings = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "client_id")
+    private Clients client;
 }

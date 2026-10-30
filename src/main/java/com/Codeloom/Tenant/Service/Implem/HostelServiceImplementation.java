@@ -61,7 +61,7 @@ public class HostelServiceImplementation implements HostelServiceInterface {
         Hostels hostel = Hostels.builder()
                 .landLord(landlord)
                 .hostelNumber(generateHostelNumber())
-                .hostelImage(hostelRequest.getHostelImage().getBytes())
+                .hostelImage(hostelRequest.getHostelImage())
                 .hostelName(hostelRequest.getHostelName())
                 .hostelDescription(hostelRequest.getHostelDescription())
                 .address(hostelRequest.getAddress())
@@ -118,7 +118,7 @@ public class HostelServiceImplementation implements HostelServiceInterface {
                 .orElseThrow(()->new RuntimeException("Hostel not found"));
 
         if (Objects.nonNull(hostelRequest.getHostelImage())&& !"".equalsIgnoreCase(hostelRequest.getHostelImage())) {
-            hostels.setHostelImage(hostelRequest.getHostelImage().getBytes());
+            hostels.setHostelImage(hostelRequest.getHostelImage());
         }
         if (Objects.nonNull(hostelRequest.getHostelName())&& !"".equalsIgnoreCase(hostelRequest.getHostelName())) {
             hostels.setHostelName(hostelRequest.getHostelName());
@@ -156,7 +156,7 @@ public class HostelServiceImplementation implements HostelServiceInterface {
     private HostelResponse toDto(Hostels hostels) {
       return   HostelResponse.builder()
                 .hostelName(hostels.getHostelName())
-                .hostelPhoto(Arrays.toString(hostels.getHostelImage()))
+                .hostelPhoto(hostels.getHostelImage())
                 .address(hostels.getAddress())
                 .hostelDescription(hostels.getHostelDescription())
                 .location(hostels.getLocation())

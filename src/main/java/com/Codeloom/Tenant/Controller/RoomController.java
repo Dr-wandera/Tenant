@@ -62,5 +62,10 @@ public class RoomController {
         return "Room vacated successfully";
     }
 
-//    public UserResponse getTenantByRoomNumber 
+    @GetMapping("/tenant/{roomNumber}")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('LANDLORD','CARETAKER','ADMIN')")
+    public RoomResponse getTenantByRoomNumber (@PathVariable String roomNumber){
+        return roomServiceImplementation.getTenantByRoomNumber(roomNumber);
+    }
 }

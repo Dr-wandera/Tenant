@@ -17,4 +17,6 @@ public interface RoomsServiceInterface {
     RoomResponse getRoomByRoomNumber(String roomNumber);
 
     void vacateRoom(String roomId);
+
+    RoomResponse getTenantByRoomNumber(String roomNumber);
 }

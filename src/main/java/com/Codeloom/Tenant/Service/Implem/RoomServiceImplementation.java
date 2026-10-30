@@ -2,11 +2,16 @@ package com.Codeloom.Tenant.Service.Implem;
 
 import com.Codeloom.Tenant.DTO.RoomRequest;
 import com.Codeloom.Tenant.DTO.RoomResponse;
+import com.Codeloom.Tenant.DTO.TenantResponse;
 import com.Codeloom.Tenant.Enum.RoomStatus;
+import com.Codeloom.Tenant.Models.Clients;
 import com.Codeloom.Tenant.Models.Hostels;
 import com.Codeloom.Tenant.Models.Rooms;
+import com.Codeloom.Tenant.Models.Users;
+import com.Codeloom.Tenant.Repository.ClientRepository;
 import com.Codeloom.Tenant.Repository.HostelRepository;
 import com.Codeloom.Tenant.Repository.RoomsRepository;
+import com.Codeloom.Tenant.Repository.UserRepository;
 import com.Codeloom.Tenant.Service.Interface.RoomsServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -22,9 +27,22 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
 
     private final HostelRepository hostelRepository;
     private final RoomsRepository roomsRepository;
+    private final UserServiceImplementation userServiceImplementation;
+    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void addRoomsToHostels(String hostelId,RoomRequest roomRequest) {
+
+        //find logged-in user
+       Users loggedInUser= userServiceImplementation.getLoggedInUser();
+
+       String logged_in_user_email = loggedInUser.getEmail();
+
+       //looks for logged-in landlord or caretaker
+       Users users=userRepository.findByEmail(logged_in_user_email)
+               .orElseThrow(()->new RuntimeException("User not found"));
+
         Hostels hostel = hostelRepository.findByHostelId(hostelId)
                 .orElseThrow(() ->
                         new RuntimeException("Hostel not found"));
@@ -97,6 +115,36 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
 
         room.setStatus(RoomStatus.AVAILABLE);
         roomsRepository.save(room);
+    }
+
+    //Return tenant with
+    @Override
+    public RoomResponse getTenantByRoomNumber(String roomNumber) {
+
+        Rooms rooms = roomsRepository.findByRoomNumberWithClients(roomNumber)
+                .orElseThrow(() -> new RuntimeException("Room not found"));
+
+        Clients client = rooms.getClient();
+
+        TenantResponse tenantResponse = null;
+
+        if (client != null && client.getUser() != null) {
+            Users user = client.getUser();
+
+            tenantResponse = TenantResponse.builder()
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .email(user.getEmail())
+                    .phoneNumber(user.getPhoneNumber())
+                    .build();
+        }
+
+        return RoomResponse.builder()
+                .roomNumber(rooms.getRoomNumber())
+                .monthlyRent(rooms.getMonthlyRent())
+                .roomImage(rooms.getRoomPhoto())
+                .tenant(tenantResponse)
+                .build();
     }
 
     private RoomResponse toResponse(Rooms rooms) {

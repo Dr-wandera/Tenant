@@ -19,7 +19,7 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String SECRET_KEY;
 
-    //this method  generate token
+    //this method  generate token assigned role of the user, time of expiration and issue time
     public String generateToken(UserDetails userDetails) {
         return Jwts
                 .builder()
