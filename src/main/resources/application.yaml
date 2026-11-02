@@ -1,4 +1,3 @@
-
 server:
   port: 8085
 
@@ -6,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/Tenant
     username: postgres
-    password: Wandera12
+    password: ${SQL_PASSWORD}
 
   jpa:
     hibernate:
@@ -16,7 +15,7 @@ spring:
       hibernate:
         format_sql: true
 
-## Email config
+  ## Email config
   mail:
     host: smtp.gmail.com
     port: 587
@@ -30,9 +29,17 @@ spring:
             enable: true
             required: true
 
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      username: tenant
+      password: Wandra12
 
 jwt:
   secret: ${JWT_SECRET}
+
+
 
 
 
