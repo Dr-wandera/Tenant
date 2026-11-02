@@ -20,9 +20,8 @@ public class RoomController {
     @PostMapping("/add/{hostelId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('LANDLORD', 'CARETAKER')")
-    public String addRoom(@PathVariable String hostelId,@RequestBody RoomRequest roomRequest){
-        roomServiceImplementation.addRoomsToHostels(hostelId,roomRequest);
-        return "Room added successfully";
+    public RoomResponse addRoom(@PathVariable String hostelId,@RequestBody RoomRequest roomRequest){
+        return roomServiceImplementation.addRoomsToHostels(hostelId,roomRequest);
     }
 
     @GetMapping("/available")
@@ -44,9 +43,8 @@ public class RoomController {
     @PutMapping("/update/{roomId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('LANDLORD','CARETAKER','ADMIN')")
-    public String updateRoom(@PathVariable String roomId,@RequestBody RoomRequest roomRequest){
-        roomServiceImplementation.updateRoomDetails(roomId,roomRequest);
-        return "Room updated successfully";
+    public RoomResponse updateRoom(@PathVariable String roomId,@RequestBody RoomRequest roomRequest){
+        return roomServiceImplementation.updateRoomDetails(roomId,roomRequest);
     }
 
     @GetMapping("/room_number/{roomNumber}")
@@ -57,9 +55,9 @@ public class RoomController {
 
     @PatchMapping("/vacate/{roomId}")
     @PreAuthorize("hasAnyRole('LANDLORD','CARETAKER','ADMIN')")
-    public String vacateRoom(@PathVariable String roomId){
-        roomServiceImplementation.vacateRoom(roomId);
-        return "Room vacated successfully";
+    @ResponseStatus(HttpStatus.OK)
+    public RoomResponse vacateRoom(@PathVariable String roomId){
+       return roomServiceImplementation.vacateRoom(roomId);
     }
 
     @GetMapping("/tenant/{roomNumber}")
@@ -68,4 +66,5 @@ public class RoomController {
     public RoomResponse getTenantByRoomNumber (@PathVariable String roomNumber){
         return roomServiceImplementation.getTenantByRoomNumber(roomNumber);
     }
+    
 }

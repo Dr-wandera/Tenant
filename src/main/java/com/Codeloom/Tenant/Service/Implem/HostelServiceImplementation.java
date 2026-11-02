@@ -7,6 +7,9 @@ import com.Codeloom.Tenant.Repository.*;
 import com.Codeloom.Tenant.Service.Interface.HostelServiceInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
@@ -25,8 +28,9 @@ public class HostelServiceImplementation implements HostelServiceInterface {
     private final UserRepository userRepository;
     private final CaretakerRepository caretakerRepository;
 
+    @CachePut(value = "HOSTEL_CACHE", key = "#result")
     @Override
-    public void createHostel(HostelRequest hostelRequest) {
+    public HostelResponse createHostel(HostelRequest hostelRequest) {
 
 
         // Gets logged-in user
@@ -71,6 +75,7 @@ public class HostelServiceImplementation implements HostelServiceInterface {
                 .build();
 
         hostelRepository.save(hostel);
+        return toResponse(hostel);
 
     }
 
@@ -80,11 +85,12 @@ public class HostelServiceImplementation implements HostelServiceInterface {
 
         return hostelRepository.findAll()
                 .stream()
-                .map(this::toDto)
+                .map(this::toResponse)
                 .toList();
     }
 
     //get hostel by hostel name
+    @Cacheable(value = "HOSTEL_CACHE", key = "#hostelName")
     @Override
     public List<HostelResponse> getByHostelName(String hostelName) {
         Hostels hostels =hostelRepository.findByHostelNameContainingIgnoreCase(hostelName)
@@ -92,28 +98,30 @@ public class HostelServiceImplementation implements HostelServiceInterface {
 
         // If list is empty → return all products
         if (hostels==null) {
-            log.warn("No product found with name: {}", hostelName);
+            log.warn("No hostel found with name: {}", hostelName);
             return hostelRepository.findAll()
                     .stream()
-                    .map(this::toDto)
+                    .map(this::toResponse)
                     .toList();
         }
 
-        return Collections.singletonList(toDto(hostels));
+        return Collections.singletonList(toResponse(hostels));
     }
 
+    @Cacheable(value = "HOSTEL_CACHE",key = "'page:' + #page + ':size:' + #size")
     @Override
     public List<HostelResponse> allHostel(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return hostelRepository.findAll(pageable)
                 .stream()
-                .map(this::toDto)
+                .map(this::toResponse)
                 .toList();
 
     }
 
+    @CachePut(value = "HOSTEL_CACHE", key = "#hostelId")
     @Override
-    public void updateHostel(String hostelId, HostelRequest hostelRequest) {
+    public HostelResponse updateHostel(String hostelId, HostelRequest hostelRequest) {
         Hostels hostels= hostelRepository.findByHostelId(hostelId)
                 .orElseThrow(()->new RuntimeException("Hostel not found"));
 
@@ -140,9 +148,11 @@ public class HostelServiceImplementation implements HostelServiceInterface {
         }
 
         hostelRepository.save(hostels);
+        return toResponse(hostels);
 
     }
 
+    @CacheEvict(value = "HOSTEL_CACHE", key = "#hostelId")
     @Override
     public void deleteHostel(String hostelId) {
         Hostels hostels =hostelRepository.findByHostelId(hostelId)
@@ -153,7 +163,7 @@ public class HostelServiceImplementation implements HostelServiceInterface {
 
 
     //converts entity to dto
-    private HostelResponse toDto(Hostels hostels) {
+    private HostelResponse toResponse(Hostels hostels) {
       return   HostelResponse.builder()
                 .hostelName(hostels.getHostelName())
                 .hostelPhoto(hostels.getHostelImage())

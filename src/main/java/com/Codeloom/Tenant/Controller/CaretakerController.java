@@ -21,21 +21,21 @@ public class CaretakerController {
     @PostMapping("/add")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('ADMIN', 'LANDLORD')")
-    public String registerCaretaker(@RequestBody CaretakerRequest caretakerRequest) throws MessagingException, IOException {
-        caretakerServiceImplementation.registerCaretaker(caretakerRequest);
-        return caretakerRequest.getFirstName()+" Registered successfully";
+    public CaretakerResponse registerCaretaker(@RequestBody CaretakerRequest caretakerRequest) throws MessagingException, IOException {
+        return caretakerServiceImplementation.registerCaretaker(caretakerRequest);
     }
 
     @GetMapping("/{idNumber}")
     @PreAuthorize("hasAnyRole('LANDLORD','ADMIN')")
+    @ResponseStatus(HttpStatus.OK)
     public CaretakerResponse getCaretakerByIdNumber(@PathVariable String idNumber){
         return caretakerServiceImplementation.getCaretakerByIdNumber(idNumber);
     }
     @PutMapping("/update/{caretakerId}")
     @PreAuthorize("hasAnyRole('LANDLORD','ADMIN')")
-    public String updateCaretaker(@PathVariable Long caretakerId,@RequestBody CaretakerRequest caretakerRequest){
-        caretakerServiceImplementation.updateCaretaker(caretakerId, caretakerRequest);
-        return "Caretaker Updated successfully";
+    @ResponseStatus(HttpStatus.OK)
+    public CaretakerResponse updateCaretaker(@PathVariable Long caretakerId,@RequestBody CaretakerRequest caretakerRequest){
+       return caretakerServiceImplementation.updateCaretaker(caretakerId, caretakerRequest);
     }
 
     //todo caretaker per logged in landlord hostel

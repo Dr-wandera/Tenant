@@ -30,7 +30,7 @@ public class CaretakerServiceImplementation implements CaretakerServiceInterface
 
     @Transactional
     @Override
-    public void registerCaretaker(CaretakerRequest caretakerRequest) throws MessagingException, IOException {
+    public CaretakerResponse registerCaretaker(CaretakerRequest caretakerRequest) throws MessagingException, IOException {
 
         //checks if there is any user with the email already in the database before saving another user with the email
         if (userRepository.findByEmail(caretakerRequest.getEmail()).isPresent()) {
@@ -56,6 +56,7 @@ public class CaretakerServiceImplementation implements CaretakerServiceInterface
 
         //sends OTP  notification to registered user to verify account
         otpVerificationServiceImplementation.generateVerificationOtp(savedUser);
+        return toResponse(caretakers);
 
     }
 
@@ -69,7 +70,7 @@ public class CaretakerServiceImplementation implements CaretakerServiceInterface
 
     //updates caretaker details
     @Override
-    public void updateCaretaker(Long caretakerId, CaretakerRequest caretakerRequest) {
+    public CaretakerResponse updateCaretaker(Long caretakerId, CaretakerRequest caretakerRequest) {
         Caretakers caretakers= caretakerRepository.findByCaretakerId(caretakerId)
                 .orElseThrow(()->new RuntimeException("Caretaker not found"));
 
@@ -87,6 +88,7 @@ public class CaretakerServiceImplementation implements CaretakerServiceInterface
         }
 
         caretakerRepository.save(caretakers);
+        return toResponse(caretakers);
 
     }
 

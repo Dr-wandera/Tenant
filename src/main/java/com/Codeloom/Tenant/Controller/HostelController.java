@@ -38,19 +38,19 @@ public class HostelController {
     @PostMapping("/add_hostel")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('LANDLORD','ADMIN')")
-    public  String AddHostel(@RequestBody HostelRequest hostelRequest){
-        hostelServiceImplementation.createHostel(hostelRequest);
-        return "Hostel Added successfully";
+    public HostelResponse AddHostel(@RequestBody HostelRequest hostelRequest){
+        return hostelServiceImplementation.createHostel(hostelRequest);
+
     }
     @PutMapping("/update/{hostelId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('LANDLORD','CARETAKER','ADMIN')")
-    public String updateHostel(@PathVariable String hostelId,@RequestBody HostelRequest hostelRequest){
-         hostelServiceImplementation.updateHostel(hostelId, hostelRequest);
-         return "Hostel Updated successfully";
+    public HostelResponse updateHostel(@PathVariable String hostelId,@RequestBody HostelRequest hostelRequest){
+         return hostelServiceImplementation.updateHostel(hostelId, hostelRequest);
     }
     @DeleteMapping("/delete/{hostelId}")
     @PreAuthorize("hasAnyRole('LANDLORD','ADMIN')")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public String deleteHostel(@PathVariable String hostelId){
         hostelServiceImplementation.deleteHostel(hostelId);
         return "Hostel Deleted successfully";

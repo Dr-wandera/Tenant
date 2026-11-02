@@ -8,7 +8,7 @@ import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import java.util.List;
 
 public interface HostelServiceInterface {
-    void createHostel(HostelRequest hostelRequest);
+    HostelResponse createHostel(HostelRequest hostelRequest);
 
     List<HostelResponse> getAllHostelUnderLandlord();
 
@@ -16,7 +16,7 @@ public interface HostelServiceInterface {
 
     List<HostelResponse> allHostel(int page, int size);
 
-    void updateHostel(String hostelId, HostelRequest hostelRequest);
+    HostelResponse updateHostel(String hostelId, HostelRequest hostelRequest);
 
     void deleteHostel(String hostelId);
 }

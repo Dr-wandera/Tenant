@@ -3,6 +3,7 @@ package com.Codeloom.Tenant.Service.Implem;
 import com.Codeloom.Tenant.DTO.LoginRequest;
 import com.Codeloom.Tenant.DTO.LoginResponse;
 import com.Codeloom.Tenant.DTO.UserRequest;
+import com.Codeloom.Tenant.DTO.UserResponse;
 import com.Codeloom.Tenant.Enum.ClientType;
 import com.Codeloom.Tenant.Enum.Role;
 import com.Codeloom.Tenant.Models.Clients;
@@ -52,7 +53,7 @@ public class UserServiceImplementation implements UserServiceInterface {
     Role assignedRole;
 
     @Override
-    public void userRegistration(UserRequest userRequest) throws MessagingException, IOException {
+    public UserResponse userRegistration(UserRequest userRequest) throws MessagingException, IOException {
 
         // If role is not provided → automatically assign it to USER
         if (userRequest.getRole() == null) {
@@ -108,6 +109,19 @@ public class UserServiceImplementation implements UserServiceInterface {
         //sends OTP  notification to registered user to verify account
         otpVerificationServiceImplementation.generateVerificationOtp(savedUser);
 
+        return toResponse(savedUser);
+
+    }
+
+    //converts Entity(users) to DTO(UserResponse)
+    private UserResponse toResponse(Users savedUser) {
+      return   UserResponse.builder()
+                .firstName(savedUser.getFirstName())
+                .lastName(savedUser.getLastName())
+                .email(savedUser.getEmail())
+                .idNumber(savedUser.getIdNumber())
+                .phoneNumber(savedUser.getPhoneNumber())
+                .build();
     }
 
     @Override

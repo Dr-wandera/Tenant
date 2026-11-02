@@ -14,6 +14,9 @@ import com.Codeloom.Tenant.Repository.RoomsRepository;
 import com.Codeloom.Tenant.Repository.UserRepository;
 import com.Codeloom.Tenant.Service.Interface.RoomsServiceInterface;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,8 +34,9 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
     private final ClientRepository clientRepository;
     private final UserRepository userRepository;
 
+    @CachePut(value = "ROOM_CACHE", key = "#result")
     @Override
-    public void addRoomsToHostels(String hostelId,RoomRequest roomRequest) {
+    public RoomResponse addRoomsToHostels(String hostelId,RoomRequest roomRequest) {
 
         //find logged-in user
        Users loggedInUser= userServiceImplementation.getLoggedInUser();
@@ -56,9 +60,12 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
                 .build();
         roomsRepository.save(rooms);
 
+        return toResponse(rooms);
+
     }
 
     //gets all rooms not occupied
+    @Cacheable(value = "ROOM_CACHE",key = "'page:' + #page + ':size:' + #size")
     @Override
     public List<RoomResponse> unOccupiedRoomPerHostel(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -69,6 +76,7 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
                 .toList();
     }
 
+    @CacheEvict(value = "ROOM_CACHE", key = "#roomId")
     @Override
     public void deleteRoom(String roomId) {
         Rooms room =roomsRepository.findByRoomId(String.valueOf(roomId))
@@ -78,8 +86,9 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
 
     }
 
+    @CachePut(value = "ROOM_CACHE", key = "#roomId")
     @Override
-    public void updateRoomDetails(String roomId, RoomRequest roomRequest) {
+    public RoomResponse updateRoomDetails(String roomId, RoomRequest roomRequest) {
         Rooms room =roomsRepository.findByRoomId(roomId)
                 .orElseThrow(()->new RuntimeException("Room not found"));
 
@@ -96,9 +105,11 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
 
         roomsRepository.save(room);
 
+        return toResponse(room);
     }
 
     //get room by room number
+    @Cacheable(value = "ROOM_CACHE", key = "'+ #roomNumber:' +#roomNumber")
     @Override
     public RoomResponse getRoomByRoomNumber(String roomNumber) {
         Rooms rooms= roomsRepository.findByRoomNumber(roomNumber)
@@ -108,16 +119,20 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
     }
 
     //this vacates the room after tenant relocate the room
+    @CachePut(value = "ROOM_CACHE", key = "#result")
     @Override
-    public void vacateRoom(String roomId) {
+    public RoomResponse vacateRoom(String roomId) {
         Rooms room = roomsRepository.findByRoomId(roomId)
                 .orElseThrow(()->new RuntimeException("Room not found"));
 
         room.setStatus(RoomStatus.AVAILABLE);
         roomsRepository.save(room);
+
+        return toResponse(room);
     }
 
     //Return tenant with
+    @Cacheable(value = "ROOM_CACHE", key = "#result.roomNumber")
     @Override
     public RoomResponse getTenantByRoomNumber(String roomNumber) {
 

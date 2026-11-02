@@ -3,6 +3,7 @@ package com.Codeloom.Tenant.Controller;
 import com.Codeloom.Tenant.DTO.LoginRequest;
 import com.Codeloom.Tenant.DTO.OtpRequest;
 import com.Codeloom.Tenant.DTO.UserRequest;
+import com.Codeloom.Tenant.DTO.UserResponse;
 import com.Codeloom.Tenant.Service.Implem.UserServiceImplementation;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,8 @@ public class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public String registerUser(@RequestBody UserRequest userRequest) throws MessagingException, IOException {
-               userServiceImplementation.userRegistration(userRequest);
-               return "You have Registered Successful. Please verify your email.";
+    public UserResponse registerUser(@RequestBody UserRequest userRequest) throws MessagingException, IOException {
+        return userServiceImplementation.userRegistration(userRequest);
     }
 
     @PostMapping("/login")
