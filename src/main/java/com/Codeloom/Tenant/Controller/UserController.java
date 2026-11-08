@@ -27,13 +27,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-//    @Cacheable(value = "LoginResponse", key = "#loginRequest.getEmail()")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 
         return userServiceImplementation.login(loginRequest);
 
     }
     @PostMapping("/verify")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> verify(@RequestBody OtpRequest request) {
         userServiceImplementation.verifyAccountOtp(request.getOtpCode());
         return ResponseEntity.ok("Account verified successfully!");
@@ -42,5 +43,11 @@ public class UserController {
     public ResponseEntity<?> resendCode(@RequestBody OtpRequest request) throws MessagingException, IOException {
         userServiceImplementation.resendOtp(request.getOtpCode());
         return ResponseEntity.ok("Code sent. Check your email for OTP to activate your account.");
+    }
+
+    @GetMapping("/total")
+    @ResponseStatus(HttpStatus.OK)
+    public Number totalUsers(){
+        return userServiceImplementation.totalUsers();
     }
 }
