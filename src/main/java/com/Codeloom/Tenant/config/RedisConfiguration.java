@@ -1,67 +1,56 @@
 package com.Codeloom.Tenant.config;
 
-import org.springframework.cache.CacheManager;
+import java.time.Duration;
+
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
+import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-import java.time.Duration;
-import java.util.Map;
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 
 @Configuration
+@EnableCaching
 public class RedisConfiguration {
+
     @Bean
-    public CacheManager redisCacheManager(
-            RedisConnectionFactory redisConnectionFactory) {
+    public RedisCacheManager cacheManager(
+            RedisConnectionFactory connectionFactory) {
 
-        // Serializer for cached response objects.
-        JacksonJsonRedisSerializer<Object> jsonSerializer =
-                new JacksonJsonRedisSerializer<>(Object.class);
+        // Allow application DTOs and required Java types
+        BasicPolymorphicTypeValidator validator =
+                BasicPolymorphicTypeValidator.builder()
+                        .allowIfSubType("com.Codeloom.Tenant.")
+                        .allowIfSubType("java.util.")
+                        .allowIfSubType("java.lang.")
+                        .allowIfSubType("java.math.")
+                        .allowIfSubType("java.time.")
+                        .build();
 
-        // Base configuration shared by the caches.
-        RedisCacheConfiguration defaultConfig =
+        // One serializer for all response types
+        GenericJacksonJsonRedisSerializer serializer =
+                GenericJacksonJsonRedisSerializer.builder()
+                        .enableDefaultTyping(validator)
+                        .build();
+
+        RedisCacheConfiguration configuration =
                 RedisCacheConfiguration.defaultCacheConfig()
+                        .entryTtl(Duration.ofMinutes(5))
                         .disableCachingNullValues()
-                        .serializeKeysWith(
-                                RedisSerializationContext.SerializationPair
-                                        .fromSerializer(
-                                                new StringRedisSerializer()
-                                        )
+                        .computePrefixWith(
+                                name -> "tenant:v1:" + name + "::"
                         )
                         .serializeValuesWith(
                                 RedisSerializationContext.SerializationPair
-                                        .fromSerializer(jsonSerializer)
+                                        .fromSerializer(serializer)
                         );
 
-        // Configure each cache separately.
-        Map<String, RedisCacheConfiguration> cacheConfigurations =
-                Map.of(
-
-                        "USER_CACHE",
-                        defaultConfig.entryTtl(Duration.ofMinutes(10)),
-
-                        "HOSTEL_CACHE",
-                        defaultConfig.entryTtl(Duration.ofMinutes(10)),
-
-                        "ROOM_CACHE",
-                        defaultConfig.entryTtl(Duration.ofMinutes(5)),
-
-                        "CARETAKER_CACHE",
-                        defaultConfig.entryTtl(Duration.ofMinutes(10)),
-
-                        "payments",
-                        defaultConfig.entryTtl(Duration.ofMinutes(1))
-
-                );
-
-        return RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(defaultConfig)
-                .withInitialCacheConfigurations(cacheConfigurations)
+        return RedisCacheManager.builder(connectionFactory)
+                .cacheDefaults(configuration)
                 .build();
     }
 }
