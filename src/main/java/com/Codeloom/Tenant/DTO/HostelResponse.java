@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Builder
 public class HostelResponse {
     private String hostelName;
-    private Long total_rooms;
     private String hostelPhoto;
     private  String address;
     private String hostelDescription;
