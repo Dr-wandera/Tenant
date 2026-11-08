@@ -16,8 +16,10 @@ import com.Codeloom.Tenant.Security.AppUserDetailService;
 import com.Codeloom.Tenant.Security.JwtService;
 import com.Codeloom.Tenant.Service.Interface.UserServiceInterface;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -52,6 +54,7 @@ public class UserServiceImplementation implements UserServiceInterface {
 
     Role assignedRole;
 
+    @Transactional
     @Override
     public UserResponse userRegistration(UserRequest userRequest) throws MessagingException, IOException {
 
@@ -191,6 +194,13 @@ public class UserServiceImplementation implements UserServiceInterface {
     @Override
     public void resendOtp(String otpCode) throws MessagingException, IOException {
         otpVerificationServiceImplementation.resendVerificationOtp(otpCode);
+    }
+
+    //Get total user using application
+    @Cacheable(value = "USER_CACHE", key = "'totalUsers'")
+    @Override
+    public Number totalUsers() {
+        return userRepository.count();
     }
 
     private void authenticate(String email, String password) {
