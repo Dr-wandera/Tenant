@@ -208,8 +208,10 @@ public class HostelServiceImplementation implements HostelServiceInterface {
     //converts User Entity to response
     private UserResponse toUserResponse(Users users) {
         return UserResponse.builder()
+                .idNumber(users.getIdNumber())
                 .firstName(users.getFirstName())
                 .lastName(users.getLastName())
+                .email(users.getEmail())
                 .phoneNumber(users.getPhoneNumber())
                 .build();
     }
