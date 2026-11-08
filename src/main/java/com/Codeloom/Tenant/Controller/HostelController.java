@@ -45,20 +45,36 @@ public class HostelController {
     @PutMapping("/update/{hostelId}")
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAnyRole('LANDLORD','CARETAKER','ADMIN')")
-    public HostelResponse updateHostel(@PathVariable String hostelId,@RequestBody HostelRequest hostelRequest){
+    public HostelResponse updateHostel(@PathVariable Long hostelId,@RequestBody HostelRequest hostelRequest){
          return hostelServiceImplementation.updateHostel(hostelId, hostelRequest);
     }
     @DeleteMapping("/delete/{hostelId}")
     @PreAuthorize("hasAnyRole('LANDLORD','ADMIN')")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public String deleteHostel(@PathVariable String hostelId){
+    public String deleteHostel(@PathVariable Long hostelId){
         hostelServiceImplementation.deleteHostel(hostelId);
         return "Hostel Deleted successfully";
     }
 
-//    public UserResponse tenants(){
-//        return hostelServiceImplementation.tenants()
-//    }
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasAnyRole('LANDLORD')")
+    public List<HostelResponse> allHostelPerLandLord(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return hostelServiceImplementation.allHostelPerLandLord(page,size);
+    }
 
+    @GetMapping("/tenants")
+    @PreAuthorize("hasAnyRole('LANDLORD')")
+    @ResponseStatus(HttpStatus.OK)
+    public List<UserResponse> getAllTenantPerHostel(
+            @RequestParam Long hostelId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return hostelServiceImplementation.getAllTenantPerHostel(hostelId, page, size);
+    }
 }
 
