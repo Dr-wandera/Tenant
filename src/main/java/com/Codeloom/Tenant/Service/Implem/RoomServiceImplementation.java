@@ -21,8 +21,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,12 +33,11 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
     private final HostelRepository hostelRepository;
     private final RoomsRepository roomsRepository;
     private final UserServiceImplementation userServiceImplementation;
-    private final ClientRepository clientRepository;
     private final UserRepository userRepository;
 
-    @CachePut(value = "ROOM_CACHE", key = "#result")
+    @CachePut(value = "ADD_ROOM_CACHE", key = "#result")
     @Override
-    public RoomResponse addRoomsToHostels(String hostelId,RoomRequest roomRequest) {
+    public RoomResponse addRoomsToHostels(Long hostelId,RoomRequest roomRequest) {
 
         //find logged-in user
        Users loggedInUser= userServiceImplementation.getLoggedInUser();
@@ -65,18 +66,19 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
     }
 
     //gets all rooms not occupied
-    @Cacheable(value = "ROOM_CACHE",key = "'page:' + #page + ':size:' + #size")
+    @Cacheable(value = "UNOCCUPIED_ROOM_CACHE", key = "'hostel:' + #hostelId + ':page:' + #page + ':size:' + #size")
     @Override
-    public List<RoomResponse> unOccupiedRoomPerHostel(int page, int size) {
+    public List<RoomResponse> unOccupiedRoomPerHostel(Long hostelId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
-        return roomsRepository.findAll(pageable)
+        // Explicitly fetching rooms with AVAILABLE status
+        return roomsRepository.findRoomsByHostelAndStatus(hostelId, RoomStatus.AVAILABLE, pageable)
                 .stream()
                 .map(this::toResponse)
-                .toList();
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    @CacheEvict(value = "ROOM_CACHE", key = "#roomId")
+    @CacheEvict(value = "DELETE_ROOM_CACHE", key = "#roomId")
     @Override
     public void deleteRoom(String roomId) {
         Rooms room =roomsRepository.findByRoomId(String.valueOf(roomId))
@@ -86,7 +88,7 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
 
     }
 
-    @CachePut(value = "ROOM_CACHE", key = "#roomId")
+    @CachePut(value = "UPDATE_ROOM_CACHE", key = "#roomId")
     @Override
     public RoomResponse updateRoomDetails(String roomId, RoomRequest roomRequest) {
         Rooms room =roomsRepository.findByRoomId(roomId)
@@ -109,7 +111,7 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
     }
 
     //get room by room number
-    @Cacheable(value = "ROOM_CACHE", key = "'+ #roomNumber:' +#roomNumber")
+    @Cacheable(value = "GETROOM_ROOM_CACHE", key = "#roomNumber")
     @Override
     public RoomResponse getRoomByRoomNumber(String roomNumber) {
         Rooms rooms= roomsRepository.findByRoomNumber(roomNumber)
@@ -119,7 +121,7 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
     }
 
     //this vacates the room after tenant relocate the room
-    @CachePut(value = "ROOM_CACHE", key = "#result")
+    @CachePut(value = "VACATE_ROOM_CACHE", key = "#result")
     @Override
     public RoomResponse vacateRoom(String roomId) {
         Rooms room = roomsRepository.findByRoomId(roomId)
@@ -132,7 +134,7 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
     }
 
     //Return tenant with
-    @Cacheable(value = "ROOM_CACHE", key = "#result.roomNumber")
+    @Cacheable(value = "ROOM_TENANT_CACHE", key = "#roomNumber")
     @Override
     public RoomResponse getTenantByRoomNumber(String roomNumber) {
 
@@ -160,6 +162,16 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
                 .roomImage(rooms.getRoomPhoto())
                 .tenant(tenantResponse)
                 .build();
+    }
+
+    @Cacheable(value = "ALL_ROOM_CACHE", key = "'hostel:' + #hostelId + ':page:' + #page + ':size:' + #size")
+    @Override
+    public List<RoomResponse> allRoomPerHostel(Long hostelId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return roomsRepository.findAll(pageable)
+                .stream()
+                .map(this::toResponse)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private RoomResponse toResponse(Rooms rooms) {
