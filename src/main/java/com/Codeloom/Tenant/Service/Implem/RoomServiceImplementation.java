@@ -13,6 +13,7 @@ import com.Codeloom.Tenant.Repository.HostelRepository;
 import com.Codeloom.Tenant.Repository.RoomsRepository;
 import com.Codeloom.Tenant.Repository.UserRepository;
 import com.Codeloom.Tenant.Service.Interface.RoomsServiceInterface;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -36,6 +37,7 @@ public class RoomServiceImplementation implements RoomsServiceInterface {
     private final UserRepository userRepository;
 
     @CachePut(value = "ADD_ROOM_CACHE", key = "#result")
+    @Transactional
     @Override
     public RoomResponse addRoomsToHostels(Long hostelId,RoomRequest roomRequest) {
 
