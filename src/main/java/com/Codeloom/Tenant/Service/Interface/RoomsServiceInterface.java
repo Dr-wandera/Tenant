@@ -6,9 +6,9 @@ import com.Codeloom.Tenant.DTO.RoomResponse;
 import java.util.List;
 
 public interface RoomsServiceInterface {
-    RoomResponse addRoomsToHostels(String hostelId,RoomRequest roomRequest);
+    RoomResponse addRoomsToHostels(Long hostelId,RoomRequest roomRequest);
 
-    List<RoomResponse> unOccupiedRoomPerHostel(int page, int size);
+    List<RoomResponse> unOccupiedRoomPerHostel(Long hostelId,int page, int size);
 
     void deleteRoom(String roomId);
 
@@ -19,4 +19,6 @@ public interface RoomsServiceInterface {
     RoomResponse vacateRoom(String roomId);
 
     RoomResponse getTenantByRoomNumber(String roomNumber);
+
+    List<RoomResponse> allRoomPerHostel(Long hostelId, int page, int size);
 }
