@@ -16,4 +16,6 @@ public interface UserServiceInterface {
     void verifyAccountOtp(String otpCode);
 
     void resendOtp(String otpCode) throws MessagingException, IOException;
+
+    Number totalUsers();
 }
