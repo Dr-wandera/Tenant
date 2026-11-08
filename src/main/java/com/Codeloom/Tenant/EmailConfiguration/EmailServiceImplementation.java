@@ -21,6 +21,7 @@ import java.util.Map;
 public class EmailServiceImplementation implements EmailServiceInterface {
 
     private final JavaMailSender mailSender;
+    private final MailConfiguration mailConfiguration;
 
     @Async
     @Override
@@ -42,6 +43,11 @@ public class EmailServiceImplementation implements EmailServiceInterface {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
+        //details of mail sender (Email, customized name)
+        helper.setFrom(
+                mailConfiguration.getFromEmail(),
+                mailConfiguration.getSenderName()
+        );
         helper.setTo(new String[]{landlordEmail, caretakerEmail});
         helper.setSubject(subject);
         helper.setText(htmlContent, true);
@@ -69,6 +75,7 @@ public class EmailServiceImplementation implements EmailServiceInterface {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
+        helper.setFrom("wanderafaustine94@gmail.com", "Tenant Hub");
         helper.setTo(clientEmail);
         helper.setSubject(Subject);
         helper.setText(htmlContent, true);
@@ -96,6 +103,7 @@ public class EmailServiceImplementation implements EmailServiceInterface {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
+        helper.setFrom("wanderafaustine94@gmail.com", "Tenant Hub");
         helper.setTo(email);
         helper.setSubject(Subject);
         helper.setText(htmlContent, true);
