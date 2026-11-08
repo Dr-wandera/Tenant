@@ -1,8 +1,11 @@
 package com.Codeloom.Tenant.Repository;
 
 import com.Codeloom.Tenant.Models.Hostels;
-import jakarta.validation.constraints.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -13,7 +16,9 @@ public interface HostelRepository extends JpaRepository<Hostels, Long> {
 
     Optional<Hostels> findByHostelNameContainingIgnoreCase(String hostelName);
 
-    Optional<Hostels> findByHostelNumber(@NotNull(message = "Hostel ID cannot be empty") String hostelNumber);
+    Optional<Hostels> findByHostelId(Long hostelId);
 
-    Optional<Hostels> findByHostelId(String hostelId);
+    @Query("SELECT h FROM Hostels h WHERE h.landLord.landLordId = :landlordId")
+    Page<Hostels> findHostelsByLandLordId(@Param("landlordId") Long landlordId, Pageable pageable);
+
 }

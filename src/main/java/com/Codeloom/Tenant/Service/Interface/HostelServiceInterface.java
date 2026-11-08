@@ -2,6 +2,7 @@ package com.Codeloom.Tenant.Service.Interface;
 
 import com.Codeloom.Tenant.DTO.HostelRequest;
 import com.Codeloom.Tenant.DTO.HostelResponse;
+import com.Codeloom.Tenant.DTO.UserResponse;
 import com.Codeloom.Tenant.Models.Bookings;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 
@@ -16,7 +17,11 @@ public interface HostelServiceInterface {
 
     List<HostelResponse> allHostel(int page, int size);
 
-    HostelResponse updateHostel(String hostelId, HostelRequest hostelRequest);
+    HostelResponse updateHostel(Long hostelId, HostelRequest hostelRequest);
 
-    void deleteHostel(String hostelId);
+    void deleteHostel(Long hostelId);
+
+    List<HostelResponse> allHostelPerLandLord(int page, int size);
+
+    List<UserResponse> getAllTenantPerHostel(Long hostelId, int page, int size);
 }
