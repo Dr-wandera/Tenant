@@ -20,17 +20,18 @@ public class RoomController {
     @PostMapping("/add/{hostelId}")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('LANDLORD', 'CARETAKER')")
-    public RoomResponse addRoom(@PathVariable String hostelId,@RequestBody RoomRequest roomRequest){
+    public RoomResponse addRoom(@PathVariable Long hostelId,@RequestBody RoomRequest roomRequest){
         return roomServiceImplementation.addRoomsToHostels(hostelId,roomRequest);
     }
 
     @GetMapping("/available")
     @ResponseStatus(HttpStatus.OK)
     public List<RoomResponse> unOccupiedRoomPerHostel(
+            @RequestParam Long hostelId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ){
-        return roomServiceImplementation.unOccupiedRoomPerHostel(page,size);
+        return roomServiceImplementation.unOccupiedRoomPerHostel(hostelId,page,size);
     }
     @DeleteMapping("/delete/{roomId}")
     @ResponseStatus(HttpStatus.OK)
@@ -66,5 +67,14 @@ public class RoomController {
     public RoomResponse getTenantByRoomNumber (@PathVariable String roomNumber){
         return roomServiceImplementation.getTenantByRoomNumber(roomNumber);
     }
-    
+
+    @GetMapping("/all")
+    @ResponseStatus(HttpStatus.OK)
+    public List<RoomResponse> allRoomPerHostel(
+            @RequestParam Long hostelId,
+            @RequestParam (defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return roomServiceImplementation.allRoomPerHostel(hostelId,page,size);
+    }
 }
