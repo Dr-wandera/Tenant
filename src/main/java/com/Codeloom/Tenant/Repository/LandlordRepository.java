@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface LandlordRepository extends JpaRepository<LandLord, Long> {
 
     Optional<LandLord> findByUser(Users user);
+
+    LandLord findByUser_UserId(Long landLordId);
 }
