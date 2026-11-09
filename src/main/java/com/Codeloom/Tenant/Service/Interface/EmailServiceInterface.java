@@ -1,8 +1,6 @@
 package com.Codeloom.Tenant.Service.Interface;
 
 import jakarta.mail.MessagingException;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,4 +13,5 @@ public interface EmailServiceInterface {
 
     void sendOtpRegisterVerification( String email, String Subject,String templateName, Map<String, String> variables) throws IOException, MessagingException;
 
+    void notificationToUserForPasswordReset(String email, String forgetToken, String s, Map<String, String> variables) throws IOException, MessagingException;
 }

@@ -23,4 +23,6 @@ public interface NotificationServiceInterface {
             String caretakerFirstName,String caretakerPhoneNumber,
             String roomNumber
     ) throws MessagingException, IOException;
+
+    void sendNotificationToUsers(String token, String email, String firstName) throws MessagingException, IOException;
 }

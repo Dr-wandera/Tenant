@@ -65,4 +65,20 @@ public class NotificationServiceImplementation implements NotificationServiceInt
         );
 
     }
+
+    @Override
+    public void sendNotificationToUsers(String token, String email, String firstName) throws MessagingException, IOException {
+        Map<String, String> variables = new HashMap<>();
+        variables.put("Token", token);
+        variables.put("FirstName", firstName);
+
+
+        emailServiceImplementation.notificationToUserForPasswordReset(
+                email,
+                "Forget Token",
+                "reset_token.html",
+                variables
+        );
+
+    }
 }
