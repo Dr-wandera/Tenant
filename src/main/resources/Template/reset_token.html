@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Your Tenant Password</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #181818;
+            margin: 0;
+            padding: 5px 16px;
+            font-family: Arial, Helvetica, sans-serif;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            color: #E8E8E8;
+        }
+
+        .email-wrapper {
+            width: 100%;
+            max-width: 660px;
+            margin: 0 auto;
+            background-color: #111111;
+            border: 1px solid #242424;
+            border-top: 5px solid #292929;
+        }
+
+        .email-content {
+            padding: 25px 32px 45px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #A6E3D8;
+        }
+
+        .header h2 {
+            margin: 0;
+            font-size: 25px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .greeting {
+            font-size: 20px;
+            line-height: 1.6;
+            margin: 0 0 20px;
+            color: #E8E8E8;
+        }
+
+        .message {
+            font-size: 20px;
+            line-height: 1.75;
+            margin: 0 0 35px;
+            color: #E8E8E8;
+        }
+
+        /* Password reset button */
+        .reset-container {
+            margin: 0 0 40px;
+            padding: 35px 15px;
+            background-color: #003F38;
+            text-align: center;
+        }
+
+        .reset-button {
+            display: inline-block;
+            padding: 18px 32px;
+            background-color: #A6E3D8;
+            color: #003F38 !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .note {
+            font-size: 19px;
+            line-height: 1.75;
+            color: #E8E8E8;
+            margin: 0 0 35px;
+        }
+
+        .link-section {
+            margin: 0 0 45px;
+            padding: 20px;
+            background-color: #262626;
+            border-radius: 6px;
+            overflow-wrap: anywhere;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #BDBDBD;
+        }
+
+        .link-section a {
+            color: #A6E3D8;
+            text-decoration: none;
+        }
+
+        /* Security tip */
+        .tip {
+            margin-bottom: 45px;
+            padding: 22px 25px;
+            border-left: 6px solid #719F97;
+            background-color: #262626;
+            font-size: 18px;
+            line-height: 1.7;
+            color: #E8E8E8;
+        }
+
+        .tip strong {
+            color: #A6E3D8;
+        }
+
+        .closing {
+            font-size: 20px;
+            line-height: 1.7;
+            margin: 0;
+            color: #E8E8E8;
+        }
+
+        /* Footer */
+        .footer {
+            border-top: 1px solid #292929;
+            padding: 25px 24px;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.8;
+            color: #A9A9A9;
+        }
+
+        .footer p {
+            margin: 8px 0;
+        }
+
+        .footer a {
+            color: #A6E3D8;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .copyright {
+            margin-top: 20px !important;
+        }
+
+        /* Mobile responsive styling */
+        @media screen and (max-width: 520px) {
+            body {
+                padding: 0;
+            }
+
+            .email-wrapper {
+                border-left: 0;
+                border-right: 0;
+            }
+
+            .email-content {
+                padding: 22px 20px 35px;
+            }
+
+            .header h2 {
+                font-size: 22px;
+            }
+
+            .greeting {
+                font-size: 18px;
+            }
+
+            .message,
+            .note,
+            .closing {
+                font-size: 17px;
+                line-height: 1.7;
+            }
+
+            .reset-container {
+                padding: 28px 10px;
+                margin-bottom: 32px;
+            }
+
+            .reset-button {
+                padding: 16px 24px;
+                font-size: 16px;
+            }
+
+            .note {
+                margin-bottom: 30px;
+            }
+
+            .link-section {
+                font-size: 14px;
+                margin-bottom: 35px;
+            }
+
+            .tip {
+                padding: 18px;
+                font-size: 16px;
+                margin-bottom: 35px;
+            }
+
+            .footer {
+                padding: 22px 16px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="email-wrapper"
+     role="article"
+     aria-label="Tenant password reset email">
+
+    <div class="email-content">
+
+        <!-- Header -->
+        <div class="header">
+            <h2>Tenant Account Security</h2>
+        </div>
+
+        <!-- Greeting -->
+        <p class="greeting">
+            Hi 👋 {{username}},
+        </p>
+
+        <!-- Introduction -->
+        <p class="message">
+            We received a request to reset the password associated
+            with your Tenant account.
+
+            To create a new password and regain access to your account,
+            click the button below.
+        </p>
+
+
+        <!-- Password reset token -->
+        <div class="reset-container">
+            <span class="otp-box">{{token}}</span>
+        </div>
+
+        <!-- Instructions -->
+        <p class="note">
+            This password reset link is valid for a limited time.
+            Please use it before it expires. Once you successfully
+            reset your password, you can log in using your new credentials.
+        </p>
+
+        <!-- Alternative link -->
+        <div class="link-section">
+            If the button above does not work, copy and paste the
+            following link into your browser:
+
+            <br><br>
+
+            <a href="{{resetLink}}">
+                {{resetLink}}
+            </a>
+        </div>
+
+        <!-- Security tip -->
+        <div class="tip">
+            <strong>Security Notice:</strong>
+            If you did not request a password reset, you can safely
+            ignore this email. Your current password will remain
+            unchanged.
+
+            <br><br>
+
+            Never share your password reset link or token with anyone.
+            Tenant support will never ask you for this information.
+        </div>
+
+        <!-- Closing message -->
+        <p class="closing">
+            Thank you for using Tenant. We are committed to keeping
+            your account secure.
+        </p>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+
+        <p>
+            If you have any questions or need assistance, please
+            contact our support team at
+
+            <a href="mailto:hello@tenant.hub">
+                hello@tenant.hub
+            </a>
+        </p>
+        <p>
+            Developed by: Faustine Wandera
+        </p>
+        <p class="copyright">
+            &copy; 2026 Tenant Hub. All rights reserved.
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>
