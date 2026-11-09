@@ -1,17 +1,18 @@
 package com.Codeloom.Tenant.Service.Implem;
 
-import com.Codeloom.Tenant.DTO.LoginRequest;
-import com.Codeloom.Tenant.DTO.LoginResponse;
-import com.Codeloom.Tenant.DTO.UserRequest;
-import com.Codeloom.Tenant.DTO.UserResponse;
+import com.Codeloom.Tenant.DTO.*;
 import com.Codeloom.Tenant.Enum.ClientType;
 import com.Codeloom.Tenant.Enum.Role;
+import com.Codeloom.Tenant.ExceptionHandler.BadRequestException;
+import com.Codeloom.Tenant.ExceptionHandler.ResourceNotFoundException;
 import com.Codeloom.Tenant.Models.Clients;
 import com.Codeloom.Tenant.Models.LandLord;
+import com.Codeloom.Tenant.Models.PasswordResetToken;
 import com.Codeloom.Tenant.Models.Users;
 import com.Codeloom.Tenant.Repository.ClientRepository;
 import com.Codeloom.Tenant.Repository.LandlordRepository;
 import com.Codeloom.Tenant.Repository.UserRepository;
+import com.Codeloom.Tenant.Repository.passwordResetTokenRepository;
 import com.Codeloom.Tenant.Security.AppUserDetailService;
 import com.Codeloom.Tenant.Security.JwtService;
 import com.Codeloom.Tenant.Service.Interface.UserServiceInterface;
@@ -38,6 +39,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Random;
 
 @Service
 @Log4j2
@@ -51,6 +53,8 @@ public class UserServiceImplementation implements UserServiceInterface {
     private final JwtService jwtService;
     private final AppUserDetailService userDetailsService;
     private final OtpVerificationServiceImplementation otpVerificationServiceImplementation;
+    private final passwordResetTokenRepository passwordResetTokenRepository;
+    private final NotificationServiceImplementation notificationServiceImplementation;
 
     Role assignedRole;
 
@@ -201,6 +205,67 @@ public class UserServiceImplementation implements UserServiceInterface {
     @Override
     public Number totalUsers() {
         return userRepository.count();
+    }
+
+    @Override
+    public void createPasswordResetToken(ForgetPasswordRequest forgetPasswordRequest) throws MessagingException, IOException {
+        Users user = userRepository.findByEmail(forgetPasswordRequest.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("Email not found"));
+
+
+        String token = generateNumericCode(6);
+
+        PasswordResetToken reset = new PasswordResetToken();
+        reset.setToken(token);
+        reset.setUser(user);
+        reset.setExpiration(LocalDateTime.now().plusMinutes(10));
+
+
+        passwordResetTokenRepository.save(reset);
+
+        //prepare variable required for the email
+        notificationServiceImplementation.sendNotificationToUsers(
+                token,
+                user.getEmail(),
+                user.getFirstName()
+        );
+
+    }
+
+    //reset password
+    @Override
+    public void resetPassword(ResetPasswordRequest resetPasswordRequest) {
+        PasswordResetToken reset = passwordResetTokenRepository.findByToken(resetPasswordRequest.getToken())
+                .orElseThrow(() -> new BadRequestException("Invalid token"));
+
+        if (reset.getExpiration().isBefore(LocalDateTime.now())) {
+            throw new BadRequestException("Token has expired");
+        }
+
+        Users user = reset.getUser();
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getNewPassword()));
+
+        if (reset.getExpiration().isBefore(LocalDateTime.now())) {
+            userRepository.save(user);
+            passwordResetTokenRepository.delete(reset);
+        }
+
+        userRepository.save(user);
+        passwordResetTokenRepository.delete(reset);
+
+    }
+
+    //generate otp to verify if the user trying to change password is real the one that registered in application
+    private String generateNumericCode(int length) {
+
+        //generate token to be sent for password reset
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < length; i++) {
+            sb.append(random.nextInt(10));
+        }
+        return sb.toString();
     }
 
     private void authenticate(String email, String password) {

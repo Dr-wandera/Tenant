@@ -1,8 +1,6 @@
 package com.Codeloom.Tenant.Service.Interface;
 
-import com.Codeloom.Tenant.DTO.LoginRequest;
-import com.Codeloom.Tenant.DTO.UserRequest;
-import com.Codeloom.Tenant.DTO.UserResponse;
+import com.Codeloom.Tenant.DTO.*;
 import jakarta.mail.MessagingException;
 import org.springframework.http.ResponseEntity;
 
@@ -18,4 +16,8 @@ public interface UserServiceInterface {
     void resendOtp(String otpCode) throws MessagingException, IOException;
 
     Number totalUsers();
+
+    void createPasswordResetToken(ForgetPasswordRequest forgetPasswordRequest) throws MessagingException, IOException;
+
+    void resetPassword(ResetPasswordRequest resetPasswordRequest);
 }

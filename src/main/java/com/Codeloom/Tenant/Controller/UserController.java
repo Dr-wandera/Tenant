@@ -1,9 +1,6 @@
 package com.Codeloom.Tenant.Controller;
 
-import com.Codeloom.Tenant.DTO.LoginRequest;
-import com.Codeloom.Tenant.DTO.OtpRequest;
-import com.Codeloom.Tenant.DTO.UserRequest;
-import com.Codeloom.Tenant.DTO.UserResponse;
+import com.Codeloom.Tenant.DTO.*;
 import com.Codeloom.Tenant.Service.Implem.UserServiceImplementation;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +30,22 @@ public class UserController {
         return userServiceImplementation.login(loginRequest);
 
     }
+    @PostMapping("/forgot-password")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<String> forgotPassword(@RequestBody ForgetPasswordRequest forgetPasswordRequest) throws MessagingException, IOException {
+        userServiceImplementation.createPasswordResetToken(forgetPasswordRequest);
+        return ResponseEntity.ok("OTP sent to your email ");
+    }
+
+    @PostMapping("/reset-password")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<String> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest) {
+
+        userServiceImplementation.resetPassword(resetPasswordRequest);
+
+        return ResponseEntity.ok("Password reset successfully");
+    }
+
     @PostMapping("/verify")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<?> verify(@RequestBody OtpRequest request) {
