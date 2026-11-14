@@ -1,4 +1,4 @@
-package com.Codeloom.Tenant.config;
+package com.Codeloom.Tenant.RedisConfig;
 
 import java.time.Duration;
 
