@@ -3,17 +3,18 @@ package com.Codeloom.Tenant.Service.Interface;
 import com.Codeloom.Tenant.DTO.HostelRequest;
 import com.Codeloom.Tenant.DTO.HostelResponse;
 import com.Codeloom.Tenant.DTO.UserResponse;
-import com.Codeloom.Tenant.Models.Bookings;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
+import com.Codeloom.Tenant.Enum.Location;
+import jakarta.mail.MessagingException;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface HostelServiceInterface {
-    HostelResponse createHostel(HostelRequest hostelRequest);
+    HostelResponse createHostel(HostelRequest hostelRequest) throws MessagingException, IOException;
 
     List<HostelResponse> getAllHostelUnderLandlord();
 
-    List<HostelResponse> getByHostelName(String hostelName);
+    List<HostelResponse> getByHostelName(java.lang.String hostelName);
 
     List<HostelResponse> allHostel(int page, int size);
 
@@ -24,4 +25,6 @@ public interface HostelServiceInterface {
     List<HostelResponse> allHostelPerLandLord(int page, int size);
 
     List<UserResponse> getAllTenantPerHostel(Long hostelId, int page, int size);
+
+    List<HostelResponse> filterHostelByLocation(String location, int page, int size);
 }

@@ -23,24 +23,24 @@ public class Hostels {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hostelId;
     @Column(length = 30, unique = true)
-    private String hostelNumber;
+    private java.lang.String hostelNumber;
 
     @NotBlank(message = "Hostel name required")
     @Column(nullable = false, length = 150)
-    private String hostelName;
+    private java.lang.String hostelName;
 
     @NotBlank(message = "Hostel photo required")
     @Column(nullable = false)
-    private String hostelImage;
+    private java.lang.String hostelImage;
 
 
     @NotBlank(message = "Address required")
     @Column(nullable = false, length = 255)
-    private String address;
+    private java.lang.String address;
 
     @NotBlank(message = "Hostel description required")
     @Column(nullable = false, length = 2000)
-    private String hostelDescription;
+    private java.lang.String hostelDescription;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 50)
@@ -48,7 +48,7 @@ public class Hostels {
 
     @NotBlank(message = "Payment details required")
     @Column(name = "payment_details", nullable = false, length = 500)
-    private String paymentDetails;
+    private java.lang.String paymentDetails;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "landlord_id", nullable = false)

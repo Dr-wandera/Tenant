@@ -3,9 +3,11 @@ package com.Codeloom.Tenant.Service.Implem;
 import com.Codeloom.Tenant.DTO.HostelRequest;
 import com.Codeloom.Tenant.DTO.HostelResponse;
 import com.Codeloom.Tenant.DTO.UserResponse;
+import com.Codeloom.Tenant.Enum.Location;
 import com.Codeloom.Tenant.Models.*;
 import com.Codeloom.Tenant.Repository.*;
 import com.Codeloom.Tenant.Service.Interface.HostelServiceInterface;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -18,6 +20,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,19 +34,22 @@ public class HostelServiceImplementation implements HostelServiceInterface {
     private final CaretakerRepository caretakerRepository;
     private final UserServiceImplementation userServiceImplementation;
     private final RoomsRepository roomsRepository;
+    private final NotificationServiceImplementation notificationServiceImplementation;
+    private final LocationNormalizer locationNormalizer;
+
 
     @CachePut(value = "ADD_HOSTEL_CACHE", key = "#result")
     @Override
-    public HostelResponse createHostel(HostelRequest hostelRequest) {
+    public HostelResponse createHostel(HostelRequest hostelRequest) throws MessagingException, IOException {
 
 
-        // Gets logged-in user
+        // Gets logged-in landlord/Admin
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null || auth.getName() == null) {
             throw new UsernameNotFoundException("No logged-in user found");
         }
 
-        String email = auth.getName();
+        java.lang.String email = auth.getName();
         // Find the user
         Users user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
@@ -79,6 +85,14 @@ public class HostelServiceImplementation implements HostelServiceInterface {
                 .build();
 
         hostelRepository.save(hostel);
+
+        //sends notification to landlord and caretaker of their hostel they have added.
+        notificationServiceImplementation.notifyLandlordAndCaretaker(
+                hostel.getCaretakers().getUser().getEmail(),
+                hostel.getLandLord().getUser().getEmail(),
+                hostel.getHostelName(),
+                hostel.getHostelNumber()
+        );
         return toResponse(hostel);
 
     }
@@ -98,7 +112,7 @@ public class HostelServiceImplementation implements HostelServiceInterface {
     //get hostel by hostel name
     @Cacheable(value = "HOSTELNAME_HOSTEL_CACHE", key = "#hostelName")
     @Override
-    public List<HostelResponse> getByHostelName(String hostelName) {
+    public List<HostelResponse> getByHostelName(java.lang.String hostelName) {
         Hostels hostels =hostelRepository.findByHostelNameContainingIgnoreCase(hostelName)
                 .orElseThrow(()->new RuntimeException("Hostel not found"));
 
@@ -149,7 +163,7 @@ public class HostelServiceImplementation implements HostelServiceInterface {
         if(Objects.nonNull(hostelRequest.getPaymentDetails())&&!"".equalsIgnoreCase(hostelRequest.getPaymentDetails())) {
             hostels.setPaymentDetails(hostelRequest.getPaymentDetails());
         }
-        if (Objects.nonNull(hostelRequest.getLocation())&&!"".equalsIgnoreCase(String.valueOf(hostelRequest.getLocation()))){
+        if (Objects.nonNull(hostelRequest.getLocation())&&!"".equalsIgnoreCase(java.lang.String.valueOf(hostelRequest.getLocation()))){
             hostels.setLocation(hostelRequest.getLocation());
         }
 
@@ -168,7 +182,7 @@ public class HostelServiceImplementation implements HostelServiceInterface {
     }
 
     //gets all hostel of the logged in landlord
-    @Cacheable(value = "ALL_HOSTEL_PER_LANDLORD_CACHE",key = "'page:' + #page + ':size:' + #size")
+    @Cacheable(value = "ALL_HOSTEL_PER_LANDLORD_CACHE",key = "'#hostelId'+page:' + #page + ':size:' + #size")
     @Override
     public List<HostelResponse> allHostelPerLandLord( int page, int size) {
 
@@ -194,6 +208,8 @@ public class HostelServiceImplementation implements HostelServiceInterface {
     @Cacheable(value = "ALL_TENANT_PER_HOSTEL_CACHE",key = "'page:' + #page + ':size:' + #size")
     @Override
     public List<UserResponse> getAllTenantPerHostel(Long hostelId, int page, int size) {
+        hostelRepository.findByHostelId(hostelId)
+                .orElseThrow(()->new RuntimeException("Hostel not found"));
 
         Pageable pageable = PageRequest.of(page, size);
 
@@ -203,6 +219,19 @@ public class HostelServiceImplementation implements HostelServiceInterface {
                 .map(this::toUserResponse)
                 .collect(Collectors.toCollection(ArrayList::new));
 
+    }
+
+    @Override
+    public List<HostelResponse> filterHostelByLocation(String location, int page, int size) {
+
+        // Normalize and validate location (converts fuzzy search, lower and upper letter to standard Location enum)
+        Location normalizedLocation = locationNormalizer.normalize(location);
+
+        Pageable pageable = PageRequest.of(page, size);
+        return hostelRepository.findHostelsByLocation(normalizedLocation,pageable)
+                .stream()
+                .map(this::toResponse)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     //converts User Entity to response
@@ -228,7 +257,7 @@ public class HostelServiceImplementation implements HostelServiceInterface {
     }
 
     //generate hostel identification number
-    private String generateHostelNumber() {
+    private java.lang.String generateHostelNumber() {
         return "HST-" + UUID.randomUUID()
                 .toString()
                 .substring(0, 8)

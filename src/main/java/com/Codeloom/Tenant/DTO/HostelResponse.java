@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class HostelResponse {
-    private String hostelName;
-    private String hostelPhoto;
-    private  String address;
-    private String hostelDescription;
+    private java.lang.String hostelName;
+    private java.lang.String hostelPhoto;
+    private java.lang.String address;
+    private java.lang.String hostelDescription;
     private Location location;
 }

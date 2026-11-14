@@ -9,19 +9,19 @@ import jakarta.validation.constraints.NotNull;
 public class HostelRequest {
 
     @NotBlank(message = "Hostel name required")
-    private String hostelName;
+    private java.lang.String hostelName;
 
     @NotBlank(message = "Hostel photo required")
-    private String hostelImage;
+    private java.lang.String hostelImage;
 
     @NotBlank(message = "Address required")
-    private String address;
+    private java.lang.String address;
 
     @NotBlank(message = "Hostel description required")
-    private String hostelDescription;
+    private java.lang.String hostelDescription;
 
     @NotBlank(message = "Payment details required")
-    private String paymentDetails;
+    private java.lang.String paymentDetails;
 
     @NotNull(message = "Location required")
     private Location location;
@@ -29,5 +29,5 @@ public class HostelRequest {
     @NotNull(message = "Total rooms required")
     private Integer totalRooms;
 
-    private String idNumber;
+    private java.lang.String idNumber;
 }
