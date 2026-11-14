@@ -79,6 +79,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> FileNotFoundException(Exception ex, HttpServletRequest req) {
         return buildError(ex,HttpStatus.INTERNAL_SERVER_ERROR,req);
     }
+    @ExceptionHandler(InvalidLocationException.class)
+    public ResponseEntity<ErrorResponse> InvalidLocationException(Exception ex, HttpServletRequest req) {
+        return buildError(ex,HttpStatus.INTERNAL_SERVER_ERROR,req);
+    }
 
 }
 
