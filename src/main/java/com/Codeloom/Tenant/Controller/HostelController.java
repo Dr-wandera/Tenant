@@ -3,14 +3,15 @@ package com.Codeloom.Tenant.Controller;
 import com.Codeloom.Tenant.DTO.HostelRequest;
 import com.Codeloom.Tenant.DTO.HostelResponse;
 import com.Codeloom.Tenant.DTO.UserResponse;
-import com.Codeloom.Tenant.Models.Bookings;
+import com.Codeloom.Tenant.Enum.Location;
 import com.Codeloom.Tenant.Service.Implem.HostelServiceImplementation;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,7 @@ public class HostelController {
 
     @GetMapping("/name/{hostelName}")
     @ResponseStatus(HttpStatus.OK)
-    public List<HostelResponse> getByHostelName(@PathVariable String hostelName){
+    public List<HostelResponse> getByHostelName(@PathVariable java.lang.String hostelName){
         return hostelServiceImplementation.getByHostelName(hostelName);
     }
     @GetMapping("/hostels")
@@ -38,7 +39,7 @@ public class HostelController {
     @PostMapping("/add_hostel")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('LANDLORD','ADMIN')")
-    public HostelResponse AddHostel(@RequestBody HostelRequest hostelRequest){
+    public HostelResponse AddHostel(@RequestBody HostelRequest hostelRequest) throws MessagingException, IOException {
         return hostelServiceImplementation.createHostel(hostelRequest);
 
     }
@@ -51,7 +52,7 @@ public class HostelController {
     @DeleteMapping("/delete/{hostelId}")
     @PreAuthorize("hasAnyRole('LANDLORD','ADMIN')")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public String deleteHostel(@PathVariable Long hostelId){
+    public java.lang.String deleteHostel(@PathVariable Long hostelId){
         hostelServiceImplementation.deleteHostel(hostelId);
         return "Hostel Deleted successfully";
     }
@@ -75,6 +76,16 @@ public class HostelController {
             @RequestParam(defaultValue = "10") int size
     ){
         return hostelServiceImplementation.getAllTenantPerHostel(hostelId, page, size);
+    }
+
+    @GetMapping("/area")
+    @ResponseStatus(HttpStatus.OK)
+    public List<HostelResponse> filterHostelByLocation(
+            @RequestParam String location,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return  hostelServiceImplementation.filterHostelByLocation(location,page,size);
     }
 }
 
