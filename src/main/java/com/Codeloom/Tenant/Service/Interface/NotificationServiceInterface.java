@@ -25,4 +25,6 @@ public interface NotificationServiceInterface {
     ) throws MessagingException, IOException;
 
     void sendNotificationToUsers(String token, String email, String firstName) throws MessagingException, IOException;
+
+    void notifyLandlordAndCaretaker(@NotBlank(message = "Email required") @Email String email, @NotBlank(message = "Email required") @Email String email1, @NotBlank(message = "Hostel name required") String hostelName, String hostelNumber) throws MessagingException, IOException;
 }

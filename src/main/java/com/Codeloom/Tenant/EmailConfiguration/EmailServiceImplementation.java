@@ -43,11 +43,7 @@ public class EmailServiceImplementation implements EmailServiceInterface {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-        //details of mail sender (Email, customized name)
-        helper.setFrom(
-                mailConfiguration.getFromEmail(),
-                mailConfiguration.getSenderName()
-        );
+        helper.setFrom("wanderafaustine94@gmail.com", "Tenant Hub");
         helper.setTo(new String[]{landlordEmail, caretakerEmail});
         helper.setSubject(subject);
         helper.setText(htmlContent, true);
@@ -132,6 +128,34 @@ public class EmailServiceImplementation implements EmailServiceInterface {
 
         helper.setFrom("wanderafaustine94@gmail.com", "Tenant Hub");
         helper.setTo(email);
+        helper.setSubject(Subject);
+        helper.setText(htmlContent, true);
+        mailSender.send(message);
+    }
+
+    @Async
+    @Override
+    public void notifyLandlordAndCaretaker(String caretakerEmail, String landlordEmail, String Subject, String templateName, Map<String, String> variable) throws IOException, MessagingException {
+
+        String templatePath = "Template/" + templateName ;
+
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream(templatePath);
+
+        if (inputStream == null) {
+            throw new FileNotFoundException("Email template not found: " + templatePath);
+        }
+
+        String htmlContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+
+        for (Map.Entry<String, String> entry : variable.entrySet()) {
+            htmlContent = htmlContent.replace("{{" + entry.getKey() + "}}", entry.getValue());
+        }
+
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+        helper.setFrom("wanderafaustine94@gmail.com", "Tenant Hub");
+        helper.setTo(new String[]{landlordEmail,caretakerEmail});
         helper.setSubject(Subject);
         helper.setText(htmlContent, true);
         mailSender.send(message);

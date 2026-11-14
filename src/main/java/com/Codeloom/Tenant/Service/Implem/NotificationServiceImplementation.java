@@ -67,9 +67,9 @@ public class NotificationServiceImplementation implements NotificationServiceInt
     }
 
     @Override
-    public void sendNotificationToUsers(String token, String email, String firstName) throws MessagingException, IOException {
+    public void sendNotificationToUsers(String otp, String email, String firstName) throws MessagingException, IOException {
         Map<String, String> variables = new HashMap<>();
-        variables.put("Token", token);
+        variables.put("OTP", otp);
         variables.put("FirstName", firstName);
 
 
@@ -80,5 +80,22 @@ public class NotificationServiceImplementation implements NotificationServiceInt
                 variables
         );
 
+    }
+
+    //notify landlord and caretaker of the hostel they have added
+    @Override
+    public void notifyLandlordAndCaretaker(String caretakerEmail, String landlordEmail, String hostelName, String hostelNumber) throws MessagingException, IOException {
+
+        Map<String, String> variable = new HashMap<>();
+        variable.put("hostelName", hostelName);
+        variable.put("hostelNumber", hostelNumber);
+
+        emailServiceImplementation.notifyLandlordAndCaretaker(
+                caretakerEmail,
+                landlordEmail,
+                "New Hostel Created",
+                "hostel_created.html",
+                variable
+        ) ;
     }
 }

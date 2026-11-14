@@ -14,4 +14,6 @@ public interface EmailServiceInterface {
     void sendOtpRegisterVerification( String email, String Subject,String templateName, Map<String, String> variables) throws IOException, MessagingException;
 
     void notificationToUserForPasswordReset(String email, String forgetToken, String s, Map<String, String> variables) throws IOException, MessagingException;
+
+    void notifyLandlordAndCaretaker(String caretakerEmail, String landlordEmail, String newHostelCreated, String s, Map<String, String> variable) throws IOException, MessagingException;
 }
